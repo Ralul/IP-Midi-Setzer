@@ -1,30 +1,30 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using IP_Midi_Setzer;
+using Core;
 
 Console.WriteLine("Hello, World!");
 
 using var sender = new Sender();
 
-while (true)
-{
-    // Send a Note On (Channel 1, Middle C, Velocity 100)
-    sender.SendNoteOn(0, 60, 100);
 
-// Send a Note Off
-    sender.SendNoteOff(0, 60);
+using var receiver = new Receiver(); // default 225.0.0.37:21928
 
-// Send Control Change (e.g., Volume on Channel 1)
-    sender.SendControlChange(0, 7, 100);
+receiver.NoteOn += (_, e) =>
+    Console.WriteLine($"Note On  | Ch {e.Channel} | Note {e.Note} | Vel {e.Velocity}");
 
-// Send Program Change
-    sender.SendProgramChange(0, 0);
+receiver.NoteOff += (_, e) =>
+    Console.WriteLine($"Note Off | Ch {e.Channel} | Note {e.Note}");
 
-// Send Pitch Bend (center = 0)
-    sender.SendPitchBend(0, 0);
+receiver.ControlChange += (_, e) =>
+    Console.WriteLine($"CC       | Ch {e.Channel} | CC {e.Controller} = {e.Value}");
 
-// Send raw MIDI bytes directly
-    sender.Send([0x90, 0x3C, 0x7F]);
-    
-    Task.Delay(1000).Wait();
-}
+receiver.PitchBend += (_, e) =>
+    Console.WriteLine($"Pitch    | Ch {e.Channel} | Value {e.Value}");
+
+receiver.UnknownMessageReceived += (_, e) =>
+    Console.WriteLine($"Unknown  | {BitConverter.ToString(e.RawData)}");
+
+receiver.Start();
+
+Console.WriteLine("Listening... Press Enter to stop.");
+Console.ReadLine();

@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IP-Midi-Setzer", "IP-Midi-Setzer\IP-Midi-Setzer.csproj", "{8CD8D65C-5BDA-4F33-BE76-F60720B253B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "debuger", "debuger\debuger.csproj", "{42DD72B0-6075-41A6-90A0-A2B3324A2163}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{82FA8175-8607-46C1-B6F2-E3069BF7FA26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{8CD8D65C-5BDA-4F33-BE76-F60720B253B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CD8D65C-5BDA-4F33-BE76-F60720B253B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CD8D65C-5BDA-4F33-BE76-F60720B253B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42DD72B0-6075-41A6-90A0-A2B3324A2163}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42DD72B0-6075-41A6-90A0-A2B3324A2163}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42DD72B0-6075-41A6-90A0-A2B3324A2163}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42DD72B0-6075-41A6-90A0-A2B3324A2163}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82FA8175-8607-46C1-B6F2-E3069BF7FA26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82FA8175-8607-46C1-B6F2-E3069BF7FA26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82FA8175-8607-46C1-B6F2-E3069BF7FA26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82FA8175-8607-46C1-B6F2-E3069BF7FA26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
