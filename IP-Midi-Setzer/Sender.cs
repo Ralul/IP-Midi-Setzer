@@ -24,24 +24,9 @@ public class Sender : IDisposable
     {
         MulticastAddress = multicastAddress;
         Port = port;
-
-        // Bind explicitly to your WiFi interface
-        var localIp = IPAddress.Parse("192.168.1.111");
-
+        
         _udpClient = new UdpClient();
-        _udpClient.Client.SetSocketOption(
-            SocketOptionLevel.Socket,
-            SocketOptionName.ReuseAddress,
-            true
-        );
-        _udpClient.Client.Bind(new IPEndPoint(localIp, 0));
-
-        // Allow multicast packets to loop back to the local machine
-        _udpClient.MulticastLoopback = true;
-
-        // Join the multicast group on the correct interface
-        _udpClient.JoinMulticastGroup(IPAddress.Parse(multicastAddress), localIp);
-
+        
         _endPoint = new IPEndPoint(IPAddress.Parse(multicastAddress), port);
     }
 
