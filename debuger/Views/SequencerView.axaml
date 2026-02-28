@@ -2,56 +2,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:debuger.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="debuger.Views.SequencerView">
+             x:Class="debuger.Views.SequencerView"
+             x:DataType="vm:SequencerViewModel">
     <StackPanel Orientation="Horizontal">
-        <Button>
-            Set
-        </Button>
-        <Button>
-            Forward
-        </Button>
-        <Button>
-            Backward
-        </Button>
-        <Button>
-            0
-        </Button>
-        <Button>
-            1
-        </Button>
-        <Button>
-            2
-        </Button>
-        <Button>
-            3
-        </Button>
-        <Button>
-            4
-        </Button>
-        <Button>
-            5
-        </Button>
-        <Button>
-            6
-        </Button>
-        <Button>
-            7
-        </Button>
-        <Button>
-            8
-        </Button>
-        <Button>
-            9
-        </Button>
-        <Button>
-            Clear
-        </Button>
-        <Button>
-            Decimal up
-        </Button>
-        <Button>
-            Decimal Down
-        </Button>
+        <Button Command="{Binding SetClickCommand}">Set hold 2 Sek</Button>
+        <Button Command="{Binding SetClickCommand}">Set</Button>
+        <Button Command="{Binding ForwardClickCommand}">Forward</Button>
+        <Button Command="{Binding BackwardClickCommand}">Backward</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="0">0</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="1">1</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="2">2</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="3">3</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="4">4</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="5">5</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="6">6</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="7">7</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="8">8</Button>
+        <Button Command="{Binding NumberClickCommand}" CommandParameter="9">9</Button>
+        <Button Command="{Binding ClearClickCommand}">Clear</Button>
+        <Button Command="{Binding DecimalUpClickCommand}">Decimal Up</Button>
+        <Button Command="{Binding DecimalDownClickCommand}">Decimal Down</Button>
     </StackPanel>
 </UserControl>

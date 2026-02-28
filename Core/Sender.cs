@@ -47,7 +47,7 @@ public class Sender : IDisposable
     /// <param name="channel">MIDI channel (0-15)</param>
     /// <param name="note">Note number (0-127)</param>
     /// <param name="velocity">Velocity (0-127)</param>
-    public void SendNoteOn(int channel, int note, int velocity)
+    public void SendNoteOn(int channel, int note, int velocity = 127)
     {
         ValidateRange(channel, 0, 15, nameof(channel));
         ValidateRange(note, 0, 127, nameof(note));

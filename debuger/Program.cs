@@ -4,6 +4,7 @@ using System;
 using debuger.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Core;
+using debuger.Services;
 
 namespace debuger;
 
@@ -28,8 +29,10 @@ sealed class Program
     {
         // ViewModels
         services.AddTransient<MainWindowViewModel>();
+        services.AddTransient<SequencerViewModel>();
         services.AddTransient<Sender>();
         services.AddTransient<Receiver>();
+        services.AddTransient<SequencerService>();
     }
     
     // Avalonia configuration, don't remove; also used by visual designer.

@@ -3,6 +3,7 @@
         xmlns:vm="using:debuger.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="debuger.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -10,13 +11,27 @@
         Title="debuger">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <StackPanel Orientation="Vertical">
-        <Button Command="{Binding ButtonClick}">Button</Button>
-    </StackPanel>
+    <ui:NavigationView x:Name="NavView"
+                       PaneDisplayMode="Left"
+                       IsSettingsVisible="False"
+                       SelectionChanged="NavView_SelectionChanged">
+        <ui:NavigationView.MenuItems>
+            <ui:NavigationViewItem Content="Sequencer"
+                                   Tag="Sequencer">
+                <ui:NavigationViewItem.IconSource>
+                    <ui:SymbolIconSource Symbol="Favorite"/>
+                </ui:NavigationViewItem.IconSource>
+            </ui:NavigationViewItem>
+            <!-- Add more items here later -->
+        </ui:NavigationView.MenuItems>
+
+        <ui:NavigationView.Content>
+            <ContentControl x:Name="NavFrame"
+                            Content="{Binding CurrentPage}" />
+        </ui:NavigationView.Content>
+    </ui:NavigationView>
 
 </Window>
