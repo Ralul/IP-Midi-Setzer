@@ -25,6 +25,13 @@
                     <ui:SymbolIconSource Symbol="Favorite"/>
                 </ui:NavigationViewItem.IconSource>
             </ui:NavigationViewItem>
+            
+            <ui:NavigationViewItem Content="Stops"
+                                   Tag="Stops">
+                <ui:NavigationViewItem.IconSource>
+                    <ui:SymbolIconSource Symbol="Clock"/>
+                </ui:NavigationViewItem.IconSource>
+            </ui:NavigationViewItem>
             <!-- Add more items here later -->
         </ui:NavigationView.MenuItems>
 

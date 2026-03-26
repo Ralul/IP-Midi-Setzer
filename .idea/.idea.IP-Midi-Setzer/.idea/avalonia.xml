@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="debuger/App.axaml" value="debuger/debuger.csproj" />
+        <entry key="debuger/Views/MainWindow.axaml" value="debuger/debuger.csproj" />
+        <entry key="debuger/Views/SequencerView.axaml" value="debuger/debuger.csproj" />
+        <entry key="debuger/Views/SequencerViewModel.axaml" value="debuger/debuger.csproj" />
+        <entry key="debuger/Views/StopsView.axaml" value="debuger/debuger.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

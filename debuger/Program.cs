@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using ReactiveUI.Avalonia;
 using System;
+using CommunityToolkit.Mvvm.Messaging;
 using debuger.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Core;
@@ -27,12 +28,22 @@ sealed class Program
     
     private static void ConfigureServices(IServiceCollection services)
     {
+        // Core Library
+        services.AddTransient<Sender>();
+        services.AddTransient<Receiver>();
+        
         // ViewModels
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<SequencerViewModel>();
-        services.AddTransient<Sender>();
-        services.AddTransient<Receiver>();
+        services.AddTransient<StopsViewModel>();
+
+        // Messenger
+        services.AddSingleton<IMessenger, WeakReferenceMessenger>();
+        
+        // Services
+        services.AddTransient<StopsService>();
         services.AddTransient<SequencerService>();
+
     }
     
     // Avalonia configuration, don't remove; also used by visual designer.

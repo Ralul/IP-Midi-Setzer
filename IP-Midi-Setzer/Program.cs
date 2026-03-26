@@ -11,7 +11,7 @@ using var receiver = new Receiver(); // default 225.0.0.37:21928
 
 receiver.NoteOn += (_, e) =>
     Console.WriteLine($"Note On  | Ch {e.Channel} | Note {e.Note} | Vel {e.Velocity}");
-
+;
 receiver.NoteOff += (_, e) =>
     Console.WriteLine($"Note Off | Ch {e.Channel} | Note {e.Note}");
 

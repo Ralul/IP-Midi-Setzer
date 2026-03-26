@@ -22,6 +22,7 @@ public partial class MainWindowViewModel : ViewModelBase
         CurrentPage = tag switch
         {
             "Sequencer" => Program.Services.GetRequiredService<SequencerViewModel>(),
+            "Stops" => Program.Services.GetRequiredService<StopsViewModel>(),
             // add more cases here later
             _ => CurrentPage
         };
