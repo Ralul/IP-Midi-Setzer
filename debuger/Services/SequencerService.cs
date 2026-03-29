@@ -14,30 +14,30 @@ public class SequencerService
 
     public void SendSet()
     {
-        _sender.SendNoteOn(SequencerDefinition.CHANEL, SequencerDefinition.SET);
+        _sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.SET);
         Task.Delay(500).Wait();
-        _sender.SendNoteOff(SequencerDefinition.CHANEL, SequencerDefinition.SET);
+        _sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.SET);
     }
 
     public void SendSetWithDelay(int delay)
     {
-        _sender.SendNoteOn(SequencerDefinition.CHANEL, SequencerDefinition.SET);
+        _sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.SET);
         Task.Delay(delay).Wait();
-        _sender.SendNoteOff(SequencerDefinition.CHANEL, SequencerDefinition.SET);
+        _sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.SET);
     }
 
     public void SendForward()
     {
-        _sender.SendNoteOn(SequencerDefinition.CHANEL, SequencerDefinition.FORWARD);
+        _sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.FORWARD);
         Task.Delay(500).Wait();
-        _sender.SendNoteOff(SequencerDefinition.CHANEL, SequencerDefinition.FORWARD);
+        _sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.FORWARD);
     }
 
     public void SendBackward()
     {
-        _sender.SendNoteOn(SequencerDefinition.CHANEL, SequencerDefinition.BACKWARD);
+        _sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.BACKWARD);
         Task.Delay(500).Wait();
-        _sender.SendNoteOff(SequencerDefinition.CHANEL, SequencerDefinition.BACKWARD);
+        _sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.BACKWARD);
     }
 
     public void SendCombination(int numberOfCombinations)
@@ -57,29 +57,29 @@ public class SequencerService
             _ => 0
         };
 
-        _sender.SendNoteOn(SequencerDefinition.CHANEL, selectedCombination);
+        _sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, selectedCombination);
         Task.Delay(500).Wait();
-        _sender.SendNoteOff(SequencerDefinition.CHANEL, selectedCombination);
+        _sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, selectedCombination);
     }
 
     public void SendClear()
     {
-        _sender.SendNoteOn(SequencerDefinition.CHANEL, SequencerDefinition.CLEAR);
+        _sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.CLEAR);
         Task.Delay(500).Wait();
-        _sender.SendNoteOff(SequencerDefinition.CHANEL, SequencerDefinition.CLEAR);
+        _sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.CLEAR);
     }
 
     public void SendDeczimalUp()
     {
-        _sender.SendNoteOn(SequencerDefinition.CHANEL, SequencerDefinition.DECIMAL_UP);
+        _sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.DECIMAL_UP);
         Task.Delay(500).Wait();
-        _sender.SendNoteOff(SequencerDefinition.CHANEL, SequencerDefinition.DECIMAL_UP);
+        _sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.DECIMAL_UP);
     }
 
     public void SendDeczimalDown()
     {
-        _sender.SendNoteOn(SequencerDefinition.CHANEL, SequencerDefinition.DECIMAL_DOWN);
+        _sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.DECIMAL_DOWN);
         Task.Delay(500).Wait();
-        _sender.SendNoteOff(SequencerDefinition.CHANEL, SequencerDefinition.DECIMAL_DOWN);
+        _sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.DECIMAL_DOWN);
     }
 }

@@ -17,9 +17,15 @@
                             BorderBrush="Blue" BorderThickness="1"
                             Padding="5">
                         <StackPanel Orientation="Horizontal">
+                            <Rectangle Width="40" Height="40" Fill="Yellow" IsVisible="{Binding IsSolenoidToEnableStopOn}" />
+                            <Rectangle Width="40" Height="40" Fill="Gray" IsVisible="{Binding !IsSolenoidToEnableStopOn}" />
                             <TextBlock Text="{Binding NoteToEnable}" />
                             <TextBlock Margin="5 0" FontWeight="Bold"
                                        Text="{Binding NoteToDisable}" />
+                            <Button Command="{Binding EnableStopCommand}">Enable</Button>
+                            <Button Command="{Binding DisableStopCommand}">Disable</Button>
+                            <Rectangle Width="40" Height="40" Fill="Yellow" IsVisible="{Binding IsSolenoidToDisableStopOn}" />
+                            <Rectangle Width="40" Height="40" Fill="Gray" IsVisible="{Binding !IsSolenoidToDisableStopOn}" />
                         </StackPanel>
                     </Border>
                 </DataTemplate>

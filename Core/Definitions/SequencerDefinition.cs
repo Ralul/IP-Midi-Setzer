@@ -2,7 +2,14 @@ namespace Core;
 
 public class SequencerDefinition
 {
-    public const int CHANEL = 15;
+    public const int CHANEL_STOPS_1_126 = 10;
+    public const int CHANEL_STOPS_127_252 = 11;
+    public const int CHANEL_STOPS_253_378 = 12;
+    public const int CHANEL_STOPS_379_504 = 13;
+    public const int CHANEL_STOPS_505_630 = 14;
+    
+    public const int CHANEL_SEQUENCER = 15;
+    
     public const int SET = 0;
     public const int FORWARD = 1;
     public const int BACKWARD = 2;
