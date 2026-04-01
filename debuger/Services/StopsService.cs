@@ -55,10 +55,10 @@ public class StopsService : IRecipient<NoteMessage>
         }
     }
 
-    public void SetNote(int note)
+    public async Task SendNote(int note)
     {
         _sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, note);
-        Task.Delay(500).Wait();
+        await Task.Delay(1000);
         _sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, note);
     }
 }

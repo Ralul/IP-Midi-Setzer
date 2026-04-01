@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using debuger.Message;
 using debuger.Services;
@@ -20,8 +21,8 @@ public class StopsViewModel : ViewModelBase, IRecipient<NoteMessage>
         _messenger = messenger;
         _stopsService = stopsService;
         
-        WeakReferenceMessenger.Default.RegisterAll(this);
-
+        _messenger.RegisterAll(this);
+        
         int index = FirstStopNote;
         while (index <= LastStopNote)
         {
@@ -33,16 +34,16 @@ public class StopsViewModel : ViewModelBase, IRecipient<NoteMessage>
 
     private void EnableStop(int note)
     {
-        _stopsService.SetNote(note);
+        _stopsService.SendNote(note);
     }
 
     private void DisableStop(int note)
     {
-        _stopsService.SetNote(note);
+        _stopsService.SendNote(note);
     }
 
     public void Receive(NoteMessage message)
     {
-        Console.WriteLine("afef");
+        
     }
 }

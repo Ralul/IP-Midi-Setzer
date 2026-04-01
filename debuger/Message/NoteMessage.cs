@@ -10,7 +10,7 @@ public class NoteMessage
     public int Note { get; }
     public int Velocity { get; }
 
-    public NoteMessage(int channel, int note, int? velocity,NoteType noteType, MessageState messageState)
+    public NoteMessage(int channel, int note, int? velocity, NoteType noteType, MessageState messageState)
     {
         Channel = channel;
         Note = note;
@@ -30,7 +30,8 @@ public class NoteMessage
 
     public override string ToString()
     {
-        return $"Chanel: {Channel}, Note: {Note}, Velocity: {Velocity}, NoteType: {NoteType},  MessageState: {MessageState}";
+        return
+            $"Chanel: {Channel}, Note: {Note}, Velocity: {Velocity}, NoteType: {NoteType},  MessageState: {MessageState}";
     }
 }
 
