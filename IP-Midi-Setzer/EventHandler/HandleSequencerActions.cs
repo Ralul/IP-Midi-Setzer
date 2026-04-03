@@ -25,15 +25,14 @@ public class HandleSequencerActions
         {
             var activeStops = _stopState.GetActiveStops();
 
-            foreach (var activeStop in activeStops)
+            Parallel.ForEach(activeStops, activeStop =>
             {
-                _sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, activeStop +1);
+                _sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, activeStop + 1);
                 Task.Delay(1000).Wait();
-                _sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, activeStop +1);
-            }
+                _sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, activeStop + 1);
+            });
             
             _stopState.Clear();
-            
         }
  
     }
