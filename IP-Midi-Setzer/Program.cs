@@ -1,28 +1,22 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Core;
+using IP_Midi_Setzer.EventHandler;
+using IP_Midi_Setzer.Service;
 
 Console.WriteLine("Hello, World!");
 
 using var sender = new Sender();
 
-
 using var receiver = new Receiver(); // default 225.0.0.37:21928
 
-receiver.NoteOn += (_, e) =>
-    Console.WriteLine($"Note On  | Ch {e.Channel} | Note {e.Note} | Vel {e.Velocity}");
-;
-receiver.NoteOff += (_, e) =>
-    Console.WriteLine($"Note Off | Ch {e.Channel} | Note {e.Note}");
+var stopStates = new StopStates();
+var stopAction = new HandleStopActions(stopStates);
+var sequencerAction = new HandleSequencerActions(stopStates, sender);
 
-receiver.ControlChange += (_, e) =>
-    Console.WriteLine($"CC       | Ch {e.Channel} | CC {e.Controller} = {e.Value}");
+receiver.NoteOn += stopAction.NoteOnHandler;
+receiver.NoteOn += sequencerAction.NoteOnHandler;
 
-receiver.PitchBend += (_, e) =>
-    Console.WriteLine($"Pitch    | Ch {e.Channel} | Value {e.Value}");
-
-receiver.UnknownMessageReceived += (_, e) =>
-    Console.WriteLine($"Unknown  | {BitConverter.ToString(e.RawData)}");
 
 receiver.Start();
 
