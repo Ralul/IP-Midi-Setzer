@@ -3,26 +3,194 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:debuger.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="200"
              x:Class="debuger.Views.SequencerView"
              x:DataType="vm:SequencerViewModel">
-    <StackPanel Orientation="Horizontal">
-        <Button Command="{Binding SetClickCommand}">Set hold 2 Sek</Button>
-        <Button Command="{Binding SetClickCommand}">Set</Button>
-        <Button Command="{Binding ForwardClickCommand}">Forward</Button>
-        <Button Command="{Binding BackwardClickCommand}">Backward</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="0">0</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="1">1</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="2">2</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="3">3</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="4">4</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="5">5</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="6">6</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="7">7</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="8">8</Button>
-        <Button Command="{Binding NumberClickCommand}" CommandParameter="9">9</Button>
-        <Button Command="{Binding ClearClickCommand}">Clear</Button>
-        <Button Command="{Binding DecimalUpClickCommand}">Decimal Up</Button>
-        <Button Command="{Binding DecimalDownClickCommand}">Decimal Down</Button>
-    </StackPanel>
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PanelBg"       Color="#1E272E"/>
+        <SolidColorBrush x:Key="NavBtnBg"       Color="#1565C0"/>
+        <SolidColorBrush x:Key="NavBtnHover"    Color="#1976D2"/>
+        <SolidColorBrush x:Key="NavBtnPressed"  Color="#0D47A1"/>
+        <SolidColorBrush x:Key="SetBtnBg"       Color="#6A1B9A"/>
+        <SolidColorBrush x:Key="SetHoldBtnBg"   Color="#4A148C"/>
+        <SolidColorBrush x:Key="NumBtnBg"       Color="#263238"/>
+        <SolidColorBrush x:Key="NumBtnHover"    Color="#37474F"/>
+        <SolidColorBrush x:Key="NumBtnPressed"  Color="#1C2B33"/>
+        <SolidColorBrush x:Key="UtilBtnBg"      Color="#37474F"/>
+        <SolidColorBrush x:Key="UtilBtnHover"   Color="#455A64"/>
+        <SolidColorBrush x:Key="Separator"      Color="#37474F"/>
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <!-- Base style for all buttons in this view -->
+        <Style Selector="Button">
+            <Setter Property="Foreground"           Value="White"/>
+            <Setter Property="FontWeight"           Value="SemiBold"/>
+            <Setter Property="CornerRadius"         Value="5"/>
+            <Setter Property="Padding"              Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment"   Value="Center"/>
+            <Setter Property="Cursor"               Value="Hand"/>
+        </Style>
+
+        <!-- Navigation buttons -->
+        <Style Selector="Button.nav">
+            <Setter Property="Background"   Value="{StaticResource NavBtnBg}"/>
+            <Setter Property="Width"        Value="80"/>
+            <Setter Property="Height"       Value="50"/>
+            <Setter Property="FontSize"     Value="13"/>
+        </Style>
+        <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
+            <Setter Property="Background"   Value="{StaticResource NavBtnHover}"/>
+        </Style>
+        <Style Selector="Button.nav:pressed /template/ ContentPresenter">
+            <Setter Property="Background"   Value="{StaticResource NavBtnPressed}"/>
+        </Style>
+
+        <!-- Set buttons -->
+        <Style Selector="Button.set">
+            <Setter Property="Background"   Value="{StaticResource SetBtnBg}"/>
+            <Setter Property="Height"       Value="50"/>
+            <Setter Property="FontSize"     Value="12"/>
+            <Setter Property="Padding"      Value="12,0"/>
+        </Style>
+        <Style Selector="Button.set-hold">
+            <Setter Property="Background"   Value="{StaticResource SetHoldBtnBg}"/>
+            <Setter Property="Height"       Value="50"/>
+            <Setter Property="FontSize"     Value="11"/>
+            <Setter Property="Padding"      Value="12,0"/>
+        </Style>
+
+        <!-- Number buttons -->
+        <Style Selector="Button.num">
+            <Setter Property="Background"   Value="{StaticResource NumBtnBg}"/>
+            <Setter Property="Width"        Value="46"/>
+            <Setter Property="Height"       Value="50"/>
+            <Setter Property="FontSize"     Value="16"/>
+        </Style>
+        <Style Selector="Button.num:pointerover /template/ ContentPresenter">
+            <Setter Property="Background"   Value="{StaticResource NumBtnHover}"/>
+        </Style>
+        <Style Selector="Button.num:pressed /template/ ContentPresenter">
+            <Setter Property="Background"   Value="{StaticResource NumBtnPressed}"/>
+        </Style>
+
+        <!-- Utility buttons (Clear, Decimal) -->
+        <Style Selector="Button.util">
+            <Setter Property="Background"   Value="{StaticResource UtilBtnBg}"/>
+            <Setter Property="Height"       Value="50"/>
+            <Setter Property="FontSize"     Value="12"/>
+            <Setter Property="Padding"      Value="10,0"/>
+        </Style>
+        <Style Selector="Button.util:pointerover /template/ ContentPresenter">
+            <Setter Property="Background"   Value="{StaticResource UtilBtnHover}"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Border Background="{StaticResource PanelBg}"
+            CornerRadius="10"
+            Padding="14,10">
+        <StackPanel Orientation="Horizontal"
+                    Spacing="8"
+                    VerticalAlignment="Center">
+
+            <!-- SET actions -->
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <Button Classes="set-hold"
+                        Command="{Binding SetClickCommand}"
+                        ToolTip.Tip="Hold Set for 2 seconds">
+                    <StackPanel Orientation="Vertical" Spacing="2" HorizontalAlignment="Center">
+                        <TextBlock Text="SET" FontSize="13" FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="hold 2s" FontSize="9" Foreground="#CE93D8"
+                                   HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Classes="set"
+                        Command="{Binding SetClickCommand}"
+                        ToolTip.Tip="Set current sequencer position">
+                    SET
+                </Button>
+            </StackPanel>
+
+            <!-- Vertical divider -->
+            <Rectangle Width="1" Height="40"
+                       Fill="{StaticResource Separator}"
+                       VerticalAlignment="Center"/>
+
+            <!-- Navigation -->
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <Button Classes="nav"
+                        Command="{Binding BackwardClickCommand}"
+                        ToolTip.Tip="Step backward">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="◀" FontSize="14" VerticalAlignment="Center"/>
+                        <TextBlock Text="Back" FontSize="11" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Classes="nav"
+                        Command="{Binding ForwardClickCommand}"
+                        ToolTip.Tip="Step forward">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="Fwd" FontSize="11" VerticalAlignment="Center"/>
+                        <TextBlock Text="▶" FontSize="14" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <!-- Vertical divider -->
+            <Rectangle Width="1" Height="40"
+                       Fill="{StaticResource Separator}"
+                       VerticalAlignment="Center"/>
+
+            <!-- Number pad -->
+            <StackPanel Orientation="Horizontal" Spacing="3">
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="0">0</Button>
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="1">1</Button>
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="2">2</Button>
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="3">3</Button>
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="4">4</Button>
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="5">5</Button>
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="6">6</Button>
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="7">7</Button>
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="8">8</Button>
+                <Button Classes="num" Command="{Binding NumberClickCommand}" CommandParameter="9">9</Button>
+            </StackPanel>
+
+            <!-- Vertical divider -->
+            <Rectangle Width="1" Height="40"
+                       Fill="{StaticResource Separator}"
+                       VerticalAlignment="Center"/>
+
+            <!-- Utility buttons -->
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <Button Classes="util"
+                        Command="{Binding ClearClickCommand}"
+                        ToolTip.Tip="Clear current entry">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <TextBlock Text="✕" FontSize="12" VerticalAlignment="Center"/>
+                        <TextBlock Text="Clear" FontSize="12" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Classes="util"
+                        Command="{Binding DecimalUpClickCommand}"
+                        ToolTip.Tip="Increment decimal position">
+                    <StackPanel Orientation="Vertical" Spacing="1" HorizontalAlignment="Center">
+                        <TextBlock Text="▲" FontSize="11" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Dec" FontSize="10" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Classes="util"
+                        Command="{Binding DecimalDownClickCommand}"
+                        ToolTip.Tip="Decrement decimal position">
+                    <StackPanel Orientation="Vertical" Spacing="1" HorizontalAlignment="Center">
+                        <TextBlock Text="▼" FontSize="11" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Dec" FontSize="10" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+        </StackPanel>
+    </Border>
 </UserControl>

@@ -4,33 +4,197 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:debuger.ViewModels"
              xmlns:controls="clr-namespace:FluentAvalonia.UI.Controls;assembly=FluentAvalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
              x:Class="debuger.Views.StopsView"
              x:DataType="vm:StopsViewModel">
 
-    <ScrollViewer>
-        <controls:ItemsRepeater ItemsSource="{Binding Stops}">
+    <UserControl.Resources>
+        <!-- Active stop indicator -->
+        <SolidColorBrush x:Key="StopActiveBrush" Color="#4CAF50"/>
+        <!-- Inactive stop indicator -->
+        <SolidColorBrush x:Key="StopInactiveBrush" Color="#37474F"/>
+        <!-- Solenoid active -->
+        <SolidColorBrush x:Key="SolenoidActiveBrush" Color="#FFC107"/>
+        <!-- Solenoid inactive -->
+        <SolidColorBrush x:Key="SolenoidInactiveBrush" Color="#263238"/>
+        <!-- Card background -->
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1E272E"/>
+        <!-- Card border active -->
+        <SolidColorBrush x:Key="CardBorderActiveBrush" Color="#4CAF50"/>
+        <!-- Card border inactive -->
+        <SolidColorBrush x:Key="CardBorderInactiveBrush" Color="#37474F"/>
+    </UserControl.Resources>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <controls:ItemsRepeater ItemsSource="{Binding Stops}"
+                                Margin="10">
+            <controls:ItemsRepeater.Layout>
+                <controls:UniformGridLayout MinColumnSpacing="8"
+                                            MinRowSpacing="8"
+                                            MinItemWidth="160"
+                                            />
+            </controls:ItemsRepeater.Layout>
             <controls:ItemsRepeater.ItemTemplate>
                 <DataTemplate x:DataType="vm:StopViewModel">
-                    <Border Margin="0,10,0,0"
-                            CornerRadius="5"
-                            BorderBrush="Blue" BorderThickness="1"
-                            Padding="5">
-                        <StackPanel Orientation="Horizontal">
-                            <Rectangle Width="40" Height="40" Fill="Yellow" IsVisible="{Binding IsSolenoidToEnableStopOn}" />
-                            <Rectangle Width="40" Height="40" Fill="Gray" IsVisible="{Binding !IsSolenoidToEnableStopOn}" />
-                            <TextBlock Text="{Binding NoteToEnable}" />
-                            <TextBlock Margin="5 0" FontWeight="Bold"
-                                       Text="{Binding NoteToDisable}" />
-                            <Button Command="{Binding EnableStopCommand}">Enable</Button>
-                            <Button Command="{Binding DisableStopCommand}">Disable</Button>
-                            <Rectangle Width="40" Height="40" Fill="Yellow" IsVisible="{Binding IsSolenoidToDisableStopOn}" />
-                            <Rectangle Width="40" Height="40" Fill="Gray" IsVisible="{Binding !IsSolenoidToDisableStopOn}" />
+                    <Border CornerRadius="8"
+                            Background="{StaticResource CardBackgroundBrush}"
+                            BorderThickness="1.5"
+                            Padding="10">
+                        <!-- Border brush switching based on IsStopOn -->
+                        <Border.Styles>
+                            <Style Selector="Border">
+                                <Setter Property="BorderBrush"
+                                        Value="{StaticResource CardBorderInactiveBrush}" />
+                            </Style>
+                            <Style Selector="Border.active">
+                                <Setter Property="BorderBrush"
+                                        Value="{StaticResource CardBorderActiveBrush}" />
+                            </Style>
+                        </Border.Styles>
+
+                        <StackPanel Orientation="Vertical" Spacing="8">
+
+                            <!-- Stop Name + Active Indicator Row -->
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0"
+                                           Text="Name"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap"
+                                           Foreground="White" />
+                                
+                                <!-- Stop State -->
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                                    <TextBlock VerticalAlignment="Center"
+                                               FontSize="11"
+                                               Foreground="#B0BEC5"
+                                               Text="Stop:" />
+                                    <Ellipse Width="14" Height="14"
+                                             VerticalAlignment="Center"
+                                             Fill="{StaticResource StopActiveBrush}"
+                                             IsVisible="{Binding IsStopOn}"
+                                             ToolTip.Tip="Stop is ON" />
+                                    <Ellipse Width="14" Height="14"
+                                             VerticalAlignment="Center"
+                                             Fill="{StaticResource StopInactiveBrush}"
+                                             IsVisible="{Binding !IsStopOn}"
+                                             ToolTip.Tip="Stop is OFF" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Separator Height="1"
+                                       Background="#37474F"
+                                       Margin="0,0,0,2" />
+
+                            <!-- Solenoids Row -->
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <!-- Enable Solenoid -->
+                                <StackPanel Grid.Column="0"
+                                            Orientation="Vertical"
+                                            HorizontalAlignment="Center"
+                                            Spacing="3"
+                                            ToolTip.Tip="Enable solenoid">
+                                    <Ellipse Width="16" Height="16"
+                                             Fill="{StaticResource SolenoidActiveBrush}"
+                                             IsVisible="{Binding IsSolenoidToEnableStopOn}" />
+                                    <Ellipse Width="16" Height="16"
+                                             Fill="{StaticResource SolenoidInactiveBrush}"
+                                             IsVisible="{Binding !IsSolenoidToEnableStopOn}" />
+                                    <TextBlock Text="EN"
+                                               FontSize="10"
+                                               Foreground="#78909C"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+
+                                <!-- Notes in center -->
+                                <StackPanel Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            HorizontalAlignment="Center"
+                                            Spacing="2">
+                                    <TextBlock Text="{Binding NoteToEnable}"
+                                               FontSize="10"
+                                               Foreground="#78909C"
+                                               HorizontalAlignment="Center" />
+                                    <TextBlock Text="{Binding NoteToDisable}"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               Foreground="#90A4AE"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+
+                                <!-- Disable Solenoid -->
+                                <StackPanel Grid.Column="2"
+                                            Orientation="Vertical"
+                                            HorizontalAlignment="Center"
+                                            Spacing="3"
+                                            ToolTip.Tip="Disable solenoid">
+                                    <Ellipse Width="16" Height="16"
+                                             Fill="{StaticResource SolenoidActiveBrush}"
+                                             IsVisible="{Binding IsSolenoidToDisableStopOn}" />
+                                    <Ellipse Width="16" Height="16"
+                                             Fill="{StaticResource SolenoidInactiveBrush}"
+                                             IsVisible="{Binding !IsSolenoidToDisableStopOn}" />
+                                    <TextBlock Text="DIS"
+                                               FontSize="10"
+                                               Foreground="#78909C"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Action Buttons -->
+                            <Grid ColumnDefinitions="*,*" >
+                                <Button Grid.Column="0"
+                                        Command="{Binding EnableStopCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center"
+                                        FontSize="11"
+                                        Padding="4,6"
+                                        Margin="0,0,3,0"
+                                        CornerRadius="4">
+                                    <Button.Styles>
+                                        <Style Selector="Button">
+                                            <Setter Property="Background" Value="#2E7D32"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Style>
+                                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                            <Setter Property="Background" Value="#388E3C"/>
+                                        </Style>
+                                        <Style Selector="Button:pressed /template/ ContentPresenter">
+                                            <Setter Property="Background" Value="#1B5E20"/>
+                                        </Style>
+                                    </Button.Styles>
+                                    Enable
+                                </Button>
+                                <Button Grid.Column="1"
+                                        Command="{Binding DisableStopCommand}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center"
+                                        FontSize="11"
+                                        Padding="4,6"
+                                        Margin="3,0,0,0"
+                                        CornerRadius="4">
+                                    <Button.Styles>
+                                        <Style Selector="Button">
+                                            <Setter Property="Background" Value="#B71C1C"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Style>
+                                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                            <Setter Property="Background" Value="#C62828"/>
+                                        </Style>
+                                        <Style Selector="Button:pressed /template/ ContentPresenter">
+                                            <Setter Property="Background" Value="#7F0000"/>
+                                        </Style>
+                                    </Button.Styles>
+                                    Disable
+                                </Button>
+                            </Grid>
+
                         </StackPanel>
                     </Border>
                 </DataTemplate>
             </controls:ItemsRepeater.ItemTemplate>
         </controls:ItemsRepeater>
     </ScrollViewer>
-
 </UserControl>

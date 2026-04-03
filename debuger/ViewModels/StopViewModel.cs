@@ -39,10 +39,11 @@ public partial class StopViewModel : ViewModelBase, IRecipient<NoteMessage>
     public void Receive(NoteMessage message)
     {
         if (message.MessageState == MessageState.Sending) return;
-        
+
         if (message.Note == _noteToEnable && message.NoteType == NoteType.On)
         {
             IsSolenoidToEnableStopOn = true;
+            IsStopOn = true;
         }
 
         if (message.Note == _noteToEnable && message.NoteType == NoteType.Off)
@@ -53,6 +54,7 @@ public partial class StopViewModel : ViewModelBase, IRecipient<NoteMessage>
         if (message.Note == _noteToDisable && message.NoteType == NoteType.On)
         {
             IsSolenoidToDisableStopOn = true;
+            IsStopOn = false;
         }
 
         if (message.Note == _noteToDisable && message.NoteType == NoteType.Off)
