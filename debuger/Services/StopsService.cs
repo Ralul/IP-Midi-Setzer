@@ -1,26 +1,31 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
 using Core;
-using debuger.Message;
+using debuger.ViewModels;
 
 namespace debuger.Services;
 
-public class StopsService : IRecipient<NoteMessage>
+public class StopsService
 {
     private readonly Sender _sender;
     private readonly Receiver _receiver;
-    private readonly IMessenger _messenger;
+
+    public readonly Dictionary<int, StopViewModel> Stops;
 
     public StopsService(
         Sender sender,
-        Receiver receiver,
-        IMessenger messenger
+        Receiver receiver
     )
     {
         _sender = sender;
         _receiver = receiver;
-        _messenger = messenger;
+
+        Stops = Enumerable.Range(1, 63)
+            .ToDictionary(
+                key => key * 2 -1,
+                value => new StopViewModel(value * 2 - 1, value * 2, ActionSendNote, ActionSendNote)
+            );
 
         _receiver.NoteOn += NoteOnHandler;
         _receiver.NoteOff += NoteOffHandler;
@@ -30,29 +35,41 @@ public class StopsService : IRecipient<NoteMessage>
 
     private void NoteOnHandler(object? sender, NoteEventArgs e)
     {
-        _messenger.Send(new NoteMessage(e, NoteType.On, MessageState.Receiveed));
-    }
-    
-    private void NoteOffHandler(object? sender, NoteEventArgs e)
-    {
-        _messenger.Send(new NoteMessage(e, NoteType.Off, MessageState.Receiveed));
+        if (e.Channel != SequencerDefinition.CHANEL_STOPS_1_126)
+        {
+            return;
+        }
+
+        if (Stops.TryGetValue(e.Note, out var stopToEnable))
+        {
+            stopToEnable.IsSolenoidToEnableStopOn = true;
+        }
+        else if (Stops.TryGetValue(e.Note - 1, out var stopToDisable))
+        {
+            stopToDisable.IsSolenoidToDisableStopOn = true;
+        }
     }
 
-    public void Receive(NoteMessage message)
+    private void NoteOffHandler(object? sender, NoteEventArgs e)
     {
-        if (message.MessageState != MessageState.Sending) return;
-        
-        switch (message.NoteType)
+        if (e.Channel != SequencerDefinition.CHANEL_STOPS_1_126)
         {
-            case NoteType.On:
-                _sender.SendNoteOn(message.Channel, message.Note);
-                break;
-            case NoteType.Off:
-                _sender.SendNoteOff(message.Channel, message.Note);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            return;
         }
+
+        if (Stops.TryGetValue(e.Note, out var stopToEnable))
+        {
+            stopToEnable.IsSolenoidToEnableStopOn = false;
+        }
+        else if (Stops.TryGetValue(e.Note - 1, out var stopToDisable))
+        {
+            stopToDisable.IsSolenoidToDisableStopOn = false;
+        }
+    }
+
+    private void ActionSendNote(int note)
+    {
+        SendNote(note);
     }
 
     public async Task SendNote(int note)

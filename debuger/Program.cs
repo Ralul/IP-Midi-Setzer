@@ -41,7 +41,7 @@ sealed class Program
         services.AddSingleton<IMessenger, WeakReferenceMessenger>();
         
         // Services
-        services.AddTransient<StopsService>();
+        services.AddSingleton<StopsService>();
         services.AddTransient<SequencerService>();
 
     }
