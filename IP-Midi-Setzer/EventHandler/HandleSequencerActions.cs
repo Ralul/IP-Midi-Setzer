@@ -64,7 +64,7 @@ public class HandleSequencerActions
             }
 
             _currentPosition++;
-            
+
             SetOrGetCombination();
         }
 
@@ -78,8 +78,6 @@ public class HandleSequencerActions
             _currentPosition--;
 
             SetOrGetCombination();
-
-
         }
 
         if (_numericActions.Contains(e.Note))
@@ -127,6 +125,30 @@ public class HandleSequencerActions
                         (_currentPosition - _currentPosition % 10) + 9);
                     break;
             }
+        }
+
+        if (e.Note == SequencerDefinition.DECIMAL_UP)
+        {
+            if (_currentPosition >= 991)
+            {
+                return;
+            }
+            
+            _currentPosition += 10;
+
+            SetOrGetCombination();
+        }
+
+        if (e.Note == SequencerDefinition.DECIMAL_DOWN)
+        {
+            if (_currentPosition <= 9)
+            {
+                return;
+            }
+
+            _currentPosition -= 10;
+
+            SetOrGetCombination();
         }
     }
 
@@ -178,6 +200,7 @@ public class HandleSequencerActions
 
     private void SetOrGetCombination()
     {
+        Console.WriteLine(_currentPosition);
         if (_isSetHold)
         {
             var activeStops = _stopState.GetActiveStops();
@@ -200,8 +223,7 @@ public class HandleSequencerActions
     private void HandleNumericAction(int number)
     {
         _currentPosition = number;
-        
+
         SetOrGetCombination();
-        
     }
 }

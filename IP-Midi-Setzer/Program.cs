@@ -20,11 +20,9 @@ receiver.NoteOn += sequencerAction.NoteOnHandler;
 
 receiver.NoteOff += sequencerAction.NoteOffHanlder;
 
-receiver.NoteOn += (_, e) =>
-    Console.WriteLine($"Note On  | Ch {e.Channel} | Note {e.Note} | Vel {e.Velocity}");
+// receiver.NoteOn += (_, e) => Console.WriteLine($"Note On  | Ch {e.Channel} | Note {e.Note} | Vel {e.Velocity}");
 
-receiver.NoteOff += (_, e) =>
-    Console.WriteLine($"Note Off | Ch {e.Channel} | Note {e.Note}");
+// receiver.NoteOff += (_, e) => Console.WriteLine($"Note Off | Ch {e.Channel} | Note {e.Note}");
 
 receiver.Start();
 
