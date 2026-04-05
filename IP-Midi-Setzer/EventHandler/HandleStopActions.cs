@@ -25,7 +25,7 @@ public class HandleStopActions
         }
         else
         {
-            _stopState.SetStopByNote(e.Note, false);
+            _stopState.SetStopByNote(e.Note -1, false);
         }
     }
 }

@@ -12,10 +12,13 @@ public class SequencerService
         _sender = sender;
     }
 
-    public void SendSet()
+    public void SendSetIsPressed()
     {
         _sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.SET);
-        Task.Delay(500).Wait();
+    }
+
+    public void SendSetIsReleased()
+    {
         _sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, SequencerDefinition.SET);
     }
 

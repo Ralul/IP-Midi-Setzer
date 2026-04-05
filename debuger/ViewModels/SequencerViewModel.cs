@@ -12,19 +12,24 @@ public partial class SequencerViewModel : ViewModelBase
     {
         _sequencerService = sequencerService;
     }
+
+    [Reactive] private bool _isSetPressed;
     
     [ReactiveCommand]
     private void SetClick()
     {
         Console.WriteLine("Set");
-        _sequencerService.SendSet();
-    }
-    
-    [ReactiveCommand]
-    private void SetHold2SekClick()
-    {
-        Console.WriteLine("Set hold 2 seconds");
-        _sequencerService.SendSetWithDelay(2000);
+
+        if (!IsSetPressed)
+        {
+            IsSetPressed = true;
+            _sequencerService.SendSetIsPressed();
+        }
+        else
+        {
+            IsSetPressed = false;
+            _sequencerService.SendSetIsReleased();
+        }
     }
 
     [ReactiveCommand]
