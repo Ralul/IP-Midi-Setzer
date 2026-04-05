@@ -34,7 +34,7 @@ sealed class Program
         
         // ViewModels
         services.AddTransient<MainWindowViewModel>();
-        services.AddTransient<SequencerViewModel>();
+        services.AddSingleton<SequencerViewModel>();
         services.AddTransient<StopsViewModel>();
 
         // Messenger
