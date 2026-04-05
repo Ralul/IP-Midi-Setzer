@@ -12,6 +12,20 @@ public class HandleSequencerActions
     private bool _isSetHold;
     private int _currentPosition;
 
+    private HashSet<int> _numericActions = new()
+    {
+        SequencerDefinition.COMBINATION_0,
+        SequencerDefinition.COMBINATION_1,
+        SequencerDefinition.COMBINATION_2,
+        SequencerDefinition.COMBINATION_3,
+        SequencerDefinition.COMBINATION_4,
+        SequencerDefinition.COMBINATION_5,
+        SequencerDefinition.COMBINATION_6,
+        SequencerDefinition.COMBINATION_7,
+        SequencerDefinition.COMBINATION_8,
+        SequencerDefinition.COMBINATION_9
+    };
+
     public HandleSequencerActions(
         StopStates stopStates,
         SequencerCombinationService sequencerCombinationService,
@@ -48,25 +62,10 @@ public class HandleSequencerActions
             {
                 return;
             }
+
             _currentPosition++;
-
-            if (_isSetHold)
-            {
-                var activeStops = _stopState.GetActiveStops();
-
-                _sequencerCombinationService.SetCombination(activeStops, _currentPosition);
-            }
-            else
-            {
-                var desiredCombination = _sequencerCombinationService.GetCombination(_currentPosition);
-
-                if (desiredCombination == null)
-                {
-                    return;
-                }
-
-                EnableSetOfStops(desiredCombination);
-            }
+            
+            SetOrGetCombination();
         }
 
         if (e.Note == SequencerDefinition.BACKWARD)
@@ -75,43 +74,60 @@ public class HandleSequencerActions
             {
                 return;
             }
+
             _currentPosition--;
 
-            if (_isSetHold)
-            {
-                var activeStops = _stopState.GetActiveStops();
+            SetOrGetCombination();
 
-                _sequencerCombinationService.SetCombination(activeStops, _currentPosition);
-            }
-            else
-            {
-                var desiredCombination = _sequencerCombinationService.GetCombination(_currentPosition);
 
-                if (desiredCombination == null)
-                {
-                    return;
-                }
-
-                EnableSetOfStops(desiredCombination);
-            }
         }
 
-        // if (e.Note == SequencerDefinition.COMBINATION_0)
-        // {
-        //     var desiredCombination = _sequencerCombinationService.GetCombination(0);
-        //
-        //     if (desiredCombination == null)
-        //     {
-        //         return;
-        //     }
-        //     
-        //     Parallel.ForEach(desiredCombination, stops =>
-        //     {
-        //         _sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, stops);
-        //         Task.Delay(1000).Wait();
-        //         _sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, stops);
-        //     });
-        // }
+        if (_numericActions.Contains(e.Note))
+        {
+            switch (e.Note)
+            {
+                case SequencerDefinition.COMBINATION_0:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 0);
+                    break;
+                case SequencerDefinition.COMBINATION_1:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 1);
+                    break;
+                case SequencerDefinition.COMBINATION_2:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 2);
+                    break;
+                case SequencerDefinition.COMBINATION_3:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 3);
+                    break;
+                case SequencerDefinition.COMBINATION_4:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 4);
+                    break;
+                case SequencerDefinition.COMBINATION_5:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 5);
+                    break;
+                case SequencerDefinition.COMBINATION_6:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 6);
+                    break;
+                case SequencerDefinition.COMBINATION_7:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 7);
+                    break;
+                case SequencerDefinition.COMBINATION_8:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 8);
+                    break;
+                case SequencerDefinition.COMBINATION_9:
+                    HandleNumericAction(
+                        (_currentPosition - _currentPosition % 10) + 9);
+                    break;
+            }
+        }
     }
 
     public void NoteOffHanlder(object? sender, NoteEventArgs e)
@@ -158,5 +174,34 @@ public class HandleSequencerActions
         });
 
         await Task.WhenAll(tasks);
+    }
+
+    private void SetOrGetCombination()
+    {
+        if (_isSetHold)
+        {
+            var activeStops = _stopState.GetActiveStops();
+
+            _sequencerCombinationService.SetCombination(activeStops, _currentPosition);
+        }
+        else
+        {
+            var desiredCombination = _sequencerCombinationService.GetCombination(_currentPosition);
+
+            if (desiredCombination == null)
+            {
+                return;
+            }
+
+            EnableSetOfStops(desiredCombination);
+        }
+    }
+
+    private void HandleNumericAction(int number)
+    {
+        _currentPosition = number;
+        
+        SetOrGetCombination();
+        
     }
 }
