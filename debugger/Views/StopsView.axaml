@@ -185,10 +185,10 @@
                                             <Setter Property="Background" Value="#B71C1C" />
                                             <Setter Property="Foreground" Value="White" />
                                         </Style>
-                                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                        <Style Selector="Button:pointerover/template/ContentPresenter">
                                             <Setter Property="Background" Value="#C62828" />
                                         </Style>
-                                        <Style Selector="Button:pressed /template/ ContentPresenter">
+                                        <Style Selector="Button:pressed/template/ContentPresenter">
                                             <Setter Property="Background" Value="#7F0000" />
                                         </Style>
                                     </Button.Styles>

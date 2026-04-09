@@ -14,7 +14,7 @@ public class StopsViewModel : ViewModelBase
         _stopsService = stopsService;
 
         messenger.RegisterAll(this);
-
+        
         foreach (var key in _stopsService.Stops.Keys)
         {
             Stops.Add(_stopsService.Stops[key]);

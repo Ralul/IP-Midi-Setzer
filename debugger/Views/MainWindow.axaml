@@ -8,7 +8,7 @@
         x:Class="debuger.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="debuger">
+        Title="debugger">
 
     <Design.DataContext>
         <vm:MainWindowViewModel />
