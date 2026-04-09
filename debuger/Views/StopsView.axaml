@@ -10,30 +10,32 @@
 
     <UserControl.Resources>
         <!-- Active stop indicator -->
-        <SolidColorBrush x:Key="StopActiveBrush" Color="#4CAF50"/>
+        <SolidColorBrush x:Key="StopActiveBrush" Color="#4CAF50" />
         <!-- Inactive stop indicator -->
-        <SolidColorBrush x:Key="StopInactiveBrush" Color="#37474F"/>
+        <SolidColorBrush x:Key="StopInactiveBrush" Color="#37474F" />
         <!-- Solenoid active -->
-        <SolidColorBrush x:Key="SolenoidActiveBrush" Color="#FFC107"/>
+        <SolidColorBrush x:Key="SolenoidActiveBrush" Color="#FFC107" />
         <!-- Solenoid inactive -->
-        <SolidColorBrush x:Key="SolenoidInactiveBrush" Color="#263238"/>
+        <SolidColorBrush x:Key="SolenoidInactiveBrush" Color="#263238" />
         <!-- Card background -->
-        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1E272E"/>
+        <SolidColorBrush x:Key="CardBackgroundBrush" Color="#1E272E" />
         <!-- Card border active -->
-        <SolidColorBrush x:Key="CardBorderActiveBrush" Color="#4CAF50"/>
+        <SolidColorBrush x:Key="CardBorderActiveBrush" Color="#4CAF50" />
         <!-- Card border inactive -->
-        <SolidColorBrush x:Key="CardBorderInactiveBrush" Color="#37474F"/>
+        <SolidColorBrush x:Key="CardBorderInactiveBrush" Color="#37474F" />
     </UserControl.Resources>
 
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
-                  VerticalScrollBarVisibility="Auto">
-        <controls:ItemsRepeater ItemsSource="{Binding Stops}"
-                                Margin="10">
+    <ScrollViewer
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+        <controls:ItemsRepeater
+            ItemsSource="{Binding Stops}"
+            Margin="10">
             <controls:ItemsRepeater.Layout>
-                <controls:UniformGridLayout MinColumnSpacing="8"
-                                            MinRowSpacing="8"
-                                            MinItemWidth="160"
-                                            />
+                <controls:UniformGridLayout
+                    MinColumnSpacing="8"
+                    MinRowSpacing="8"
+                    MinItemWidth="160" />
             </controls:ItemsRepeater.Layout>
             <controls:ItemsRepeater.ItemTemplate>
                 <DataTemplate x:DataType="vm:StopViewModel">
@@ -44,16 +46,20 @@
                         <!-- Border brush switching based on IsStopOn -->
                         <Border.Styles>
                             <Style Selector="Border">
-                                <Setter Property="BorderBrush"
-                                        Value="{StaticResource CardBorderInactiveBrush}" />
+                                <Setter
+                                    Property="BorderBrush"
+                                    Value="{StaticResource CardBorderInactiveBrush}" />
                             </Style>
                             <Style Selector="Border.active">
-                                <Setter Property="BorderBrush"
-                                        Value="{StaticResource CardBorderActiveBrush}" />
+                                <Setter
+                                    Property="BorderBrush"
+                                    Value="{StaticResource CardBorderActiveBrush}" />
                             </Style>
                         </Border.Styles>
 
-                        <StackPanel Orientation="Vertical" Spacing="8">
+                        <StackPanel
+                            Orientation="Vertical"
+                            Spacing="8">
 
                             <!-- Stop Name + Active Indicator Row -->
                             <Grid ColumnDefinitions="*,Auto">
@@ -64,7 +70,7 @@
                                            VerticalAlignment="Center"
                                            TextWrapping="Wrap"
                                            Foreground="White" />
-                                
+
                                 <!-- Stop State -->
                                 <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
                                     <TextBlock VerticalAlignment="Center"
@@ -119,8 +125,7 @@
                                                HorizontalAlignment="Center" />
                                     <TextBlock Text="{Binding NoteToDisable}"
                                                FontSize="10"
-                                               FontWeight="Bold"
-                                               Foreground="#90A4AE"
+                                               Foreground="#78909C"
                                                HorizontalAlignment="Center" />
                                 </StackPanel>
 
@@ -144,7 +149,7 @@
                             </Grid>
 
                             <!-- Action Buttons -->
-                            <Grid ColumnDefinitions="*,*" >
+                            <Grid ColumnDefinitions="*,*">
                                 <Button Grid.Column="0"
                                         Command="{Binding EnableStopCommand}"
                                         HorizontalAlignment="Stretch"
@@ -155,14 +160,14 @@
                                         CornerRadius="4">
                                     <Button.Styles>
                                         <Style Selector="Button">
-                                            <Setter Property="Background" Value="#2E7D32"/>
-                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="Background" Value="#2E7D32" />
+                                            <Setter Property="Foreground" Value="White" />
                                         </Style>
                                         <Style Selector="Button:pointerover /template/ ContentPresenter">
-                                            <Setter Property="Background" Value="#388E3C"/>
+                                            <Setter Property="Background" Value="#388E3C" />
                                         </Style>
                                         <Style Selector="Button:pressed /template/ ContentPresenter">
-                                            <Setter Property="Background" Value="#1B5E20"/>
+                                            <Setter Property="Background" Value="#1B5E20" />
                                         </Style>
                                     </Button.Styles>
                                     Enable
@@ -177,20 +182,19 @@
                                         CornerRadius="4">
                                     <Button.Styles>
                                         <Style Selector="Button">
-                                            <Setter Property="Background" Value="#B71C1C"/>
-                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="Background" Value="#B71C1C" />
+                                            <Setter Property="Foreground" Value="White" />
                                         </Style>
                                         <Style Selector="Button:pointerover /template/ ContentPresenter">
-                                            <Setter Property="Background" Value="#C62828"/>
+                                            <Setter Property="Background" Value="#C62828" />
                                         </Style>
                                         <Style Selector="Button:pressed /template/ ContentPresenter">
-                                            <Setter Property="Background" Value="#7F0000"/>
+                                            <Setter Property="Background" Value="#7F0000" />
                                         </Style>
                                     </Button.Styles>
                                     Disable
                                 </Button>
                             </Grid>
-
                         </StackPanel>
                     </Border>
                 </DataTemplate>

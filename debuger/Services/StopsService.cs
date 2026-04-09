@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core;
+using Core.Definitions;
 using debuger.ViewModels;
 
 namespace debuger.Services;

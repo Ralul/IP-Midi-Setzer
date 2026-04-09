@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Core;
+using Core.Definitions;
 
 namespace debuger.Services;
 

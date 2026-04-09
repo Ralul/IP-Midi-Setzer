@@ -1,4 +1,5 @@
 using Core;
+using Core.Definitions;
 using IP_Midi_Setzer.Service;
 
 namespace IP_Midi_Setzer.EventHandler;
