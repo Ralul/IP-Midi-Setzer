@@ -22,13 +22,13 @@ while (!cts.Token.IsCancellationRequested)
 
     if (key.Key == ConsoleKey.E)
     {
-        Console.WriteLine("Enter channel 1 to 16");
+        Console.WriteLine("Enter channel 0 to 15");
         var channelInput = Console.ReadLine();
         if (int.TryParse(channelInput, out var channel))
         {
             if (channel >= 1 && channel <= 16)
             {
-                Console.WriteLine("Enter note 1 to 127");
+                Console.WriteLine("Enter note 0 to 127");
                 var noteInput = Console.ReadLine();
                 if (int.TryParse(noteInput, out var note))
                 {
