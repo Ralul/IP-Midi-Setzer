@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pi-Stops-Input", "Pi-Stops-Input\Pi-Stops-Input.csproj", "{2CA8A6C5-49DB-4104-A6D0-B605A7F33945}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestWindchestModule", "TestWindchestModule\TestWindchestModule.csproj", "{D5A72758-F260-42C3-B678-283A924D689F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{2CA8A6C5-49DB-4104-A6D0-B605A7F33945}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CA8A6C5-49DB-4104-A6D0-B605A7F33945}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CA8A6C5-49DB-4104-A6D0-B605A7F33945}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5A72758-F260-42C3-B678-283A924D689F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5A72758-F260-42C3-B678-283A924D689F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5A72758-F260-42C3-B678-283A924D689F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5A72758-F260-42C3-B678-283A924D689F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
