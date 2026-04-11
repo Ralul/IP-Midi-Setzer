@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 namespace Core;
@@ -19,15 +20,33 @@ public class Sender : IDisposable
     // Default ipMIDI multicast address and port
     public const string DefaultMulticastAddress = "225.0.0.37";
     public const int DefaultPort = 21928;
+    public const string DefaultInterfaceName = "eth0";
 
-    public Sender(string multicastAddress = DefaultMulticastAddress, int port = DefaultPort)
+    public Sender(string multicastAddress = DefaultMulticastAddress, int port = DefaultPort,
+        string interfaceName = DefaultInterfaceName)
     {
         MulticastAddress = multicastAddress;
         Port = port;
-        
-        _udpClient = new UdpClient();
-        
+
+        var localAddress = NetworkInterface
+            .GetAllNetworkInterfaces()
+            .First(n => n.Name == interfaceName)
+            .GetIPProperties()
+            .UnicastAddresses
+            .First(a => a.Address.AddressFamily == AddressFamily.InterNetwork)
+            .Address.ToString();
+
+
         _endPoint = new IPEndPoint(IPAddress.Parse(multicastAddress), port);
+        
+        // Bind to the specific network interface
+        _udpClient = new UdpClient(new IPEndPoint(IPAddress.Parse(localAddress), 0));
+        // Tell the OS to send multicast packets out on this interface
+        _udpClient.Client.SetSocketOption(
+            SocketOptionLevel.IP,
+            SocketOptionName.MulticastInterface,
+            IPAddress.Parse(localAddress).GetAddressBytes()
+        );
     }
 
     /// <summary>
