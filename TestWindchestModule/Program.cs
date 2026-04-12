@@ -8,7 +8,6 @@ public class Program
     static public void Main()
     {
         Env.Load();
-        
         string interfaceName = Environment.GetEnvironmentVariable("NETWORK_INTERFACENAME");
 
         using var sender = new Sender(interfaceName: interfaceName);
