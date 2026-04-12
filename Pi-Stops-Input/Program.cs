@@ -42,7 +42,7 @@ class Program
         controller.OpenPin(s1Pin, PinMode.Output);
         controller.OpenPin(s2Pin, PinMode.Output);
         controller.OpenPin(s3Pin, PinMode.Output);
-        controller.OpenPin(sigPin, PinMode.Input);
+        controller.OpenPin(sigPin, PinMode.InputPullDown);
 
         Console.WriteLine("Pi-Stops-Input. Press Ctrl+C to exit.");
         while (true)
@@ -58,7 +58,9 @@ class Program
                 controller.Write(s1Pin, isS1PinOn ? PinValue.High : PinValue.Low);
                 controller.Write(s2Pin, isS2PinOn ? PinValue.High : PinValue.Low);
                 controller.Write(s3Pin, isS3PinOn ? PinValue.High : PinValue.Low);
-
+                
+                Thread.Sleep(1);
+                
                 var isToggled = controller.Read(sigPin);
 
                 if (isToggled == PinValue.High)
