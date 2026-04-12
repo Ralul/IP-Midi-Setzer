@@ -1,12 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Core;
+using DotNetEnv;
 using IP_Midi_Setzer.EventHandler;
 using IP_Midi_Setzer.Service;
 
 Console.WriteLine("Hello, World!");
+Env.Load();
 
-using var sender = new Sender();
+using var sender = new Sender(interfaceName: Environment.GetEnvironmentVariable("NETWORK_INTERFACENAME"));
 
 using var receiver = new Receiver(); // default 225.0.0.37:21928
 

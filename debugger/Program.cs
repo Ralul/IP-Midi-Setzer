@@ -6,6 +6,7 @@ using debuger.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Core;
 using debuger.Services;
+using DotNetEnv;
 
 namespace debuger;
 
@@ -28,8 +29,10 @@ sealed class Program
     
     private static void ConfigureServices(IServiceCollection services)
     {
+        Env.Load();
+
         // Core Library
-        services.AddTransient<Sender>();
+        services.AddTransient<Sender>(sp => new Sender(interfaceName: Environment.GetEnvironmentVariable("NETWORK_INTERFACENAME")));
         services.AddTransient<Receiver>();
         
         // ViewModels

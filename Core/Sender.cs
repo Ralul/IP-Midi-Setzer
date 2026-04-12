@@ -27,7 +27,7 @@ public class Sender : IDisposable
     {
         MulticastAddress = multicastAddress;
         Port = port;
-
+        
         var localAddress = NetworkInterface
             .GetAllNetworkInterfaces()
             .First(n => n.Name == interfaceName)
@@ -35,7 +35,6 @@ public class Sender : IDisposable
             .UnicastAddresses
             .First(a => a.Address.AddressFamily == AddressFamily.InterNetwork)
             .Address.ToString();
-
 
         _endPoint = new IPEndPoint(IPAddress.Parse(multicastAddress), port);
         
