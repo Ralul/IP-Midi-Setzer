@@ -6,27 +6,44 @@ namespace Pi_Stops_Input;
 
 class Program
 {
-    
     static void Main()
     {
         Env.Load();
         using var sender = new Sender(interfaceName: Environment.GetEnvironmentVariable("NETWORK_INTERFACENAME"));
-        
-        const int s0Pin = 17; // Select/Address pin
-        const int s1Pin = 18; // Select/Address pin
-        const int s2Pin = 27; // Select/Address pin
-        const int s3Pin = 22; // Select/Address pin
-        const int eoPin = 23; // Enable for all switches ON/OFF
-        const int sigPin = 24; // Common input or output.
-        
+
+        int s0Pin = 2; // Select/Address pin
+        int s1Pin = 3; // Select/Address pin
+        int s2Pin = 4; // Select/Address pin
+        int s3Pin = 17; // Select/Address pin
+        int sigPin = 27; // Common input or output.
+
+        var pinMode = Environment.GetEnvironmentVariable("PIN_MODE");
+
+        if (pinMode != null && pinMode.Equals("sequencer", StringComparison.CurrentCultureIgnoreCase))
+        {
+            s0Pin = 2;
+            s1Pin = 3;
+            s2Pin = 4;
+            s3Pin = 17;
+            sigPin = 27;
+        }
+        else if (pinMode != null && pinMode.Equals("stop-toggles", StringComparison.CurrentCultureIgnoreCase))
+        {
+            s0Pin = 22;
+            s1Pin = 10;
+            s2Pin = 9;
+            s3Pin = 11;
+            sigPin = 0;
+        }
+
+
         using GpioController controller = new GpioController();
         controller.OpenPin(s0Pin, PinMode.Output);
         controller.OpenPin(s1Pin, PinMode.Output);
         controller.OpenPin(s2Pin, PinMode.Output);
         controller.OpenPin(s3Pin, PinMode.Output);
-        controller.OpenPin(eoPin, PinMode.Output);
         controller.OpenPin(sigPin, PinMode.Input);
-        
+
         Console.WriteLine("Pi-Stops-Input. Press Ctrl+C to exit.");
         while (true)
         {
