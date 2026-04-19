@@ -8,9 +8,9 @@ public class Program
     static public void Main()
     {
         Env.Load();
-        string interfaceName = Environment.GetEnvironmentVariable("NETWORK_INTERFACENAME");
+        var isDevModeOn = Environment.GetEnvironmentVariable("IS_RUNNING_IN_DEVELOPMENT") == "true";
 
-        using var sender = new Sender(interfaceName: interfaceName);
+        using var sender = new Sender(isDveModeOn: isDevModeOn);
 
         using var receiver = new Receiver(); // default 225.0.0.37:21928
 

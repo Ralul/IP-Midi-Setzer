@@ -31,8 +31,16 @@ sealed class Program
     {
         Env.Load();
 
+        if (Environment.GetEnvironmentVariable("IS_RUNNING_IN_DEVELOPMENT") == "true")
+        {
+            services.AddTransient<Sender>(sp => new Sender(isDveModeOn: true));
+        }
+        else
+        {
+            services.AddTransient<Sender>();
+        }
+
         // Core Library
-        services.AddTransient<Sender>(sp => new Sender(interfaceName: Environment.GetEnvironmentVariable("NETWORK_INTERFACENAME")));
         services.AddTransient<Receiver>();
         
         // ViewModels

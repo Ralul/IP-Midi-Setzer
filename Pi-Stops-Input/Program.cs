@@ -9,8 +9,9 @@ class Program
     static void Main()
     {
         Env.Load();
-        using var sender = new Sender(interfaceName: Environment.GetEnvironmentVariable("NETWORK_INTERFACENAME"));
+        var isDevModeOn = Environment.GetEnvironmentVariable("IS_RUNNING_IN_DEVELOPMENT") == "true";
 
+        using var sender = new Sender(isDveModeOn: isDevModeOn);
         int s0Pin = 2; // Select/Address pin
         int s1Pin = 3; // Select/Address pin
         int s2Pin = 4; // Select/Address pin

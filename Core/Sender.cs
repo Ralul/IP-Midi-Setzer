@@ -14,25 +14,32 @@ public class Sender : IDisposable
     private readonly IPEndPoint _endPoint;
     private bool _disposed;
 
-    public string MulticastAddress { get;}
+    public string MulticastAddress { get; }
     public int Port { get; }
-    public string InterfaceName { get;}
+    public string InterfaceName { get; }
 
     // Default ipMIDI multicast address and port
     public const string DefaultMulticastAddress = "225.0.0.37";
     public const int DefaultPort = 21928;
-    public const string DefaultInterfaceName = "eth0";
+    public const string RaspberryPiInterfaceName = "eth0";
 
     public Sender(
-        string? multicastAddress = DefaultMulticastAddress, 
+        bool? isDveModeOn = false,
+        string? multicastAddress = DefaultMulticastAddress,
         int? port = DefaultPort,
-        string? interfaceName = DefaultInterfaceName)
+        string? interfaceName = RaspberryPiInterfaceName)
     {
         MulticastAddress = !string.IsNullOrEmpty(multicastAddress) ? multicastAddress : DefaultMulticastAddress;
         Port = port ?? DefaultPort;
-        InterfaceName = !string.IsNullOrEmpty(interfaceName) ? interfaceName : DefaultInterfaceName;
+        InterfaceName = !string.IsNullOrEmpty(interfaceName) ? interfaceName : RaspberryPiInterfaceName;
 
-        
+        if (isDveModeOn.HasValue && isDveModeOn.Value)
+        {
+            _endPoint = new IPEndPoint(IPAddress.Parse(MulticastAddress), Port);
+            _udpClient = new UdpClient();
+            return;
+        }
+
         var localAddress = NetworkInterface
             .GetAllNetworkInterfaces()
             .First(n => n.Name == InterfaceName)
@@ -42,7 +49,7 @@ public class Sender : IDisposable
             .Address.ToString();
 
         _endPoint = new IPEndPoint(IPAddress.Parse(MulticastAddress), Port);
-        
+
         // Bind to the specific network interface
         _udpClient = new UdpClient(new IPEndPoint(IPAddress.Parse(localAddress), 0));
         // Tell the OS to send multicast packets out on this interface
