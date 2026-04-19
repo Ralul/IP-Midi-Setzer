@@ -19,14 +19,37 @@ public class HandleStopActions
         {
             return;
         }
-        
-        if (e.Note % 2 == 1)
+
+        if (e.Channel == SequencerDefinition.CHANEL_STOPS_1_126)
         {
-            _stopState.SetStopByNote(e.Note, true);
+            if (e.Note % 2 == 1)
+            {
+                _stopState.SetStopByNote(e.Note, true);
+            }
+            else
+            {
+                _stopState.SetStopByNote(e.Note -1, false);
+            }
         }
-        else
+        
+        if (e.Channel == SequencerDefinition.CHANEL_STOPS_127_252)
         {
-            _stopState.SetStopByNote(e.Note -1, false);
+            // todo add hanling
+        }
+        
+        if (e.Channel == SequencerDefinition.CHANEL_STOPS_253_378)
+        {
+            // todo add hanling
+        }
+        
+        if (e.Channel == SequencerDefinition.CHANEL_STOPS_379_504)
+        {
+            // todo add hanling
+        }
+        
+        if (e.Channel == SequencerDefinition.CHANEL_STOPS_505_630)
+        {
+            // todo add hanling
         }
     }
 }
