@@ -87,14 +87,14 @@ class Program
                 if (!pressedButtonsByIndex[i] && isToggled == PinValue.High)
                 {
                     pressedButtonsByIndex[i] = true;
-                    sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, 25);
+                    sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, i);
                     Console.WriteLine($"{i} is pressed");
                 }
 
                 if (pressedButtonsByIndex[i] && isToggled == PinValue.Low)
                 {
                     pressedButtonsByIndex[i] = false;
-                    sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, 25);
+                    sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, i);
                     Console.WriteLine($"{i} is released");
                 }
             }
