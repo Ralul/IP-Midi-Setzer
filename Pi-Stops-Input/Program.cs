@@ -11,6 +11,7 @@ class Program
     {
         Env.Load();
         using var sender = new Sender(isDveModeOn: true);
+        using var senderSecond = new Sender();
 
         int s0Pin = 2; // Select/Address pin
         int s1Pin = 3; // Select/Address pin
@@ -117,3 +118,8 @@ class Program
         }
     }
 }
+
+// wenn regeister wippe gedrüpck magent einschalten und wider ausacheltne (note on und wider note off)
+// für sequender gilt das nicht da dir bisheirge lokeik überneiemn ohne offset von 25
+// für sequender muss sender in dev mode sein
+// für stops muss sender in deve mode sein und ien zusäelchen der normal ist
