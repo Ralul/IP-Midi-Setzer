@@ -1,5 +1,6 @@
 ﻿using System.Device.Gpio;
 using Core;
+using Core.Definitions;
 using DotNetEnv;
 
 namespace Pi_Stops_Input;
@@ -9,8 +10,7 @@ class Program
     static void Main()
     {
         Env.Load();
-        //var isDevModeOn = Environment.GetEnvironmentVariable("IS_RUNNING_IN_DEVELOPMENT") == "true";
-        //using var sender = new Sender(isDveModeOn: isDevModeOn);
+        using var sender = new Sender();
 
         int s0Pin = 2; // Select/Address pin
         int s1Pin = 3; // Select/Address pin
@@ -87,12 +87,14 @@ class Program
                 if (!pressedButtonsByIndex[i] && isToggled == PinValue.High)
                 {
                     pressedButtonsByIndex[i] = true;
+                    sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, 25);
                     Console.WriteLine($"{i} is pressed");
                 }
 
                 if (pressedButtonsByIndex[i] && isToggled == PinValue.Low)
                 {
                     pressedButtonsByIndex[i] = false;
+                    sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, 25);
                     Console.WriteLine($"{i} is released");
                 }
             }
