@@ -84,19 +84,16 @@ class Program
 
                 var isToggled = controller.Read(sigPin);
 
-                if (isToggled == PinValue.High)
+                if (!pressedButtonsByIndex[i] && isToggled == PinValue.High)
                 {
-                    if (!pressedButtonsByIndex[i])
-                    {
-                        pressedButtonsByIndex[i] = true;
-                        Console.WriteLine($"{i} is pressed");
-                    }
+                    pressedButtonsByIndex[i] = true;
+                    Console.WriteLine($"{i} is pressed");
+                }
 
-                    if (pressedButtonsByIndex[i] && isToggled == PinValue.Low)
-                    {
-                        pressedButtonsByIndex[i] = false;
-                        Console.WriteLine($"{i} is released");
-                    }
+                if (pressedButtonsByIndex[i] && isToggled == PinValue.Low)
+                {
+                    pressedButtonsByIndex[i] = false;
+                    Console.WriteLine($"{i} is released");
                 }
             }
         }
