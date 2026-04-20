@@ -10,7 +10,7 @@ class Program
     static void Main()
     {
         Env.Load();
-        using var sender = new Sender();
+        using var sender = new Sender(isDveModeOn: true);
 
         int s0Pin = 2; // Select/Address pin
         int s1Pin = 3; // Select/Address pin
@@ -87,15 +87,31 @@ class Program
                 if (!pressedButtonsByIndex[i] && isToggled == PinValue.High)
                 {
                     pressedButtonsByIndex[i] = true;
-                    sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, i);
                     Console.WriteLine($"{i} is pressed");
+
+                    if (pinMode != null && pinMode.Equals("stop-toggles", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, i + 25);
+                    }
+                    else
+                    {
+                        sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, i + 25);
+                    }
                 }
 
                 if (pressedButtonsByIndex[i] && isToggled == PinValue.Low)
                 {
                     pressedButtonsByIndex[i] = false;
-                    sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, i);
                     Console.WriteLine($"{i} is released");
+
+                    if (pinMode != null && pinMode.Equals("stop-toggles", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, i + 25);
+                    }
+                    else
+                    {
+                        sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, i + 25);
+                    }
                 }
             }
         }
