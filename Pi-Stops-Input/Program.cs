@@ -25,8 +25,8 @@ class Program
             s0Pin = 2;
             s1Pin = 3;
             s2Pin = 4;
-            s3Pin = 8;
-            sigPin = 10;
+            s3Pin = 17;
+            sigPin = 27;
         }
         else if (pinMode != null && pinMode.Equals("stop-toggles", StringComparison.CurrentCultureIgnoreCase))
         {
