@@ -9,9 +9,9 @@ class Program
     static void Main()
     {
         Env.Load();
-        var isDevModeOn = Environment.GetEnvironmentVariable("IS_RUNNING_IN_DEVELOPMENT") == "true";
-        using var sender = new Sender(isDveModeOn: isDevModeOn);
-        
+        //var isDevModeOn = Environment.GetEnvironmentVariable("IS_RUNNING_IN_DEVELOPMENT") == "true";
+        //using var sender = new Sender(isDveModeOn: isDevModeOn);
+
         int s0Pin = 2; // Select/Address pin
         int s1Pin = 3; // Select/Address pin
         int s2Pin = 4; // Select/Address pin
@@ -45,6 +45,26 @@ class Program
         controller.OpenPin(s3Pin, PinMode.Output);
         controller.OpenPin(sigPin, PinMode.InputPullDown);
 
+        var pressedButtonsByIndex = new Dictionary<int, bool>
+        {
+            { 0, false },
+            { 1, false },
+            { 2, false },
+            { 3, false },
+            { 4, false },
+            { 5, false },
+            { 6, false },
+            { 7, false },
+            { 8, false },
+            { 9, false },
+            { 10, false },
+            { 11, false },
+            { 12, false },
+            { 13, false },
+            { 14, false },
+            { 15, false }
+        };
+
         Console.WriteLine("Pi-Stops-Input. Press Ctrl+C to exit.");
         while (true)
         {
@@ -59,14 +79,24 @@ class Program
                 controller.Write(s1Pin, isS1PinOn ? PinValue.High : PinValue.Low);
                 controller.Write(s2Pin, isS2PinOn ? PinValue.High : PinValue.Low);
                 controller.Write(s3Pin, isS3PinOn ? PinValue.High : PinValue.Low);
-                
+
                 Thread.Sleep(1);
-                
+
                 var isToggled = controller.Read(sigPin);
 
                 if (isToggled == PinValue.High)
                 {
-                    Console.WriteLine($"{i}: {isToggled}");
+                    if (!pressedButtonsByIndex[i])
+                    {
+                        pressedButtonsByIndex[i] = true;
+                        Console.WriteLine($"{i} is pressed");
+                    }
+
+                    if (pressedButtonsByIndex[i] && isToggled == PinValue.Low)
+                    {
+                        pressedButtonsByIndex[i] = false;
+                        Console.WriteLine($"{i} is released");
+                    }
                 }
             }
         }
