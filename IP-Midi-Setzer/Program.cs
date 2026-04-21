@@ -4,11 +4,8 @@ using IP_Midi_Setzer.EventHandler;
 using IP_Midi_Setzer.Service;
 
 Console.WriteLine("Hello, World!");
-Env.Load();
 
-var isDevModeOn = Environment.GetEnvironmentVariable("IS_RUNNING_IN_DEVELOPMENT") == "true";
-
-using var sender = new Sender(isDveModeOn: isDevModeOn);
+using var sender = new Sender();
 using var receiver = new Receiver(); // default 225.0.0.37:21928
 
 var stopStates = new StopStates();

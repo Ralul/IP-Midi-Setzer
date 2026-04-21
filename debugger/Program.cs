@@ -29,18 +29,10 @@ sealed class Program
     
     private static void ConfigureServices(IServiceCollection services)
     {
-        Env.Load();
-
-        if (Environment.GetEnvironmentVariable("IS_RUNNING_IN_DEVELOPMENT") == "true")
-        {
-            services.AddTransient<Sender>(sp => new Sender(isDveModeOn: true));
-        }
-        else
-        {
-            services.AddTransient<Sender>();
-        }
+       
 
         // Core Library
+        services.AddTransient<Sender>();
         services.AddTransient<Receiver>();
         
         // ViewModels

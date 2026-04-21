@@ -1,72 +1,51 @@
 ﻿using System.Device.Gpio;
 using Core;
 using Core.Definitions;
-using DotNetEnv;
 
 namespace Pi_Stops_Input;
 
 class Program
 {
+    private static readonly Dictionary<int, bool> StopsStatedByIndex = new()
+    {
+        { 0, false },
+        { 1, false },
+        { 2, false },
+        { 3, false },
+        { 4, false },
+        { 5, false },
+        { 6, false },
+        { 7, false },
+        { 8, false },
+        { 9, false },
+        { 10, false },
+        { 11, false },
+        { 12, false },
+        { 13, false },
+        { 14, false },
+        { 15, false }
+    };
+
     static void Main()
     {
-        Env.Load();
-        using var sender = new Sender(isDveModeOn: true);
-        using var senderSecond = new Sender();
+        using var sender = new Sender();
 
-        int s0Pin = 2; // Select/Address pin
-        int s1Pin = 3; // Select/Address pin
-        int s2Pin = 4; // Select/Address pin
-        int s3Pin = 17; // Select/Address pin
-        int sigPin = 27; // Common input or output.
-
-        var pinMode = Environment.GetEnvironmentVariable("PIN_MODE");
-
-        if (pinMode != null && pinMode.Equals("sequencer", StringComparison.CurrentCultureIgnoreCase))
-        {
-            s0Pin = 2;
-            s1Pin = 3;
-            s2Pin = 4;
-            s3Pin = 17;
-            sigPin = 27;
-        }
-        else if (pinMode != null && pinMode.Equals("stop-toggles", StringComparison.CurrentCultureIgnoreCase))
-        {
-            s0Pin = 22;
-            s1Pin = 10;
-            s2Pin = 9;
-            s3Pin = 11;
-            sigPin = 0;
-        }
+        const int s0Pin = 22; // Select/Address pin
+        const int s1Pin = 10; // Select/Address pin
+        const int s2Pin = 9; // Select/Address pin
+        const int s3Pin = 11; // Select/Address pin
+        const int sigPin = 0; // Common input or output.
 
 
-        using GpioController controller = new GpioController();
+        using var controller = new GpioController();
         controller.OpenPin(s0Pin, PinMode.Output);
         controller.OpenPin(s1Pin, PinMode.Output);
         controller.OpenPin(s2Pin, PinMode.Output);
         controller.OpenPin(s3Pin, PinMode.Output);
         controller.OpenPin(sigPin, PinMode.InputPullDown);
 
-        var pressedButtonsByIndex = new Dictionary<int, bool>
-        {
-            { 0, false },
-            { 1, false },
-            { 2, false },
-            { 3, false },
-            { 4, false },
-            { 5, false },
-            { 6, false },
-            { 7, false },
-            { 8, false },
-            { 9, false },
-            { 10, false },
-            { 11, false },
-            { 12, false },
-            { 13, false },
-            { 14, false },
-            { 15, false }
-        };
-
         Console.WriteLine("Pi-Stops-Input. Press Ctrl+C to exit.");
+
         while (true)
         {
             for (int i = 0; i < 16; i++)
@@ -83,36 +62,26 @@ class Program
 
                 Thread.Sleep(1);
 
-                var isToggled = controller.Read(sigPin);
+                var stopHasChanged = !controller.Read(sigPin).Equals((PinValue)(object?)StopsStatedByIndex[i]);
 
-                if (!pressedButtonsByIndex[i] && isToggled == PinValue.High)
+
+                if (stopHasChanged)
                 {
-                    pressedButtonsByIndex[i] = true;
-                    Console.WriteLine($"{i} is pressed");
+                    Console.WriteLine($"{i} is toggled");
 
-                    if (pinMode != null && pinMode.Equals("stop-toggles", StringComparison.CurrentCultureIgnoreCase))
+                    if (StopsStatedByIndex[i])
                     {
-                        sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, i + 25);
-                    }
-                    else
+                        sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, i * 2 + 25);
+                        Task.Delay(100).Wait();
+                        sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, i * 2 + 25);
+                    }else
                     {
-                        sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, i + 25);
+                        sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, i * 2 + 25 -1);
+                        Task.Delay(100).Wait();
+                        sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, i * 2 + 25 -1);
                     }
-                }
 
-                if (pressedButtonsByIndex[i] && isToggled == PinValue.Low)
-                {
-                    pressedButtonsByIndex[i] = false;
-                    Console.WriteLine($"{i} is released");
-
-                    if (pinMode != null && pinMode.Equals("stop-toggles", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, i + 25);
-                    }
-                    else
-                    {
-                        sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, i + 25);
-                    }
+                    StopsStatedByIndex[i] = !StopsStatedByIndex[i];
                 }
             }
         }

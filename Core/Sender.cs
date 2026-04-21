@@ -10,6 +10,7 @@ namespace Core;
 /// </summary>
 public class Sender : IDisposable
 {
+    private readonly UdpClient _udpClientLoopBack;
     private readonly UdpClient _udpClient;
     private readonly IPEndPoint _endPoint;
     private bool _disposed;
@@ -24,7 +25,6 @@ public class Sender : IDisposable
     public const string RaspberryPiInterfaceName = "eth0";
 
     public Sender(
-        bool? isDveModeOn = false,
         string? multicastAddress = DefaultMulticastAddress,
         int? port = DefaultPort,
         string? interfaceName = RaspberryPiInterfaceName)
@@ -33,31 +33,34 @@ public class Sender : IDisposable
         Port = port ?? DefaultPort;
         InterfaceName = !string.IsNullOrEmpty(interfaceName) ? interfaceName : RaspberryPiInterfaceName;
 
-        if (isDveModeOn.HasValue && isDveModeOn.Value)
-        {
-            _endPoint = new IPEndPoint(IPAddress.Parse(MulticastAddress), Port);
-            _udpClient = new UdpClient();
-            return;
-        }
-
-        var localAddress = NetworkInterface
-            .GetAllNetworkInterfaces()
-            .First(n => n.Name == InterfaceName)
-            .GetIPProperties()
-            .UnicastAddresses
-            .First(a => a.Address.AddressFamily == AddressFamily.InterNetwork)
-            .Address.ToString();
-
+        _udpClientLoopBack = new UdpClient();
         _endPoint = new IPEndPoint(IPAddress.Parse(MulticastAddress), Port);
 
-        // Bind to the specific network interface
-        _udpClient = new UdpClient(new IPEndPoint(IPAddress.Parse(localAddress), 0));
-        // Tell the OS to send multicast packets out on this interface
-        _udpClient.Client.SetSocketOption(
-            SocketOptionLevel.IP,
-            SocketOptionName.MulticastInterface,
-            IPAddress.Parse(localAddress).GetAddressBytes()
-        );
+        try
+        {
+            // todo make sure this exectpin is better handeld !!!
+            var localAddress = NetworkInterface
+                .GetAllNetworkInterfaces()
+                .First(n => n.Name == InterfaceName)
+                .GetIPProperties()
+                .UnicastAddresses
+                .First(a => a.Address.AddressFamily == AddressFamily.InterNetwork)
+                .Address.ToString();
+
+
+            // Bind to the specific network interface
+            _udpClient = new UdpClient(new IPEndPoint(IPAddress.Parse(localAddress), 0));
+            // Tell the OS to send multicast packets out on this interface
+            _udpClient.Client.SetSocketOption(
+                SocketOptionLevel.IP,
+                SocketOptionName.MulticastInterface,
+                IPAddress.Parse(localAddress).GetAddressBytes()
+            );
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Exception type {e.GetType()}: {e.Message}");
+        }
     }
 
     /// <summary>
@@ -68,7 +71,16 @@ public class Sender : IDisposable
         if (midiData == null || midiData.Length == 0)
             throw new ArgumentException("MIDI data cannot be null or empty.", nameof(midiData));
 
-        _udpClient.Send(midiData, midiData.Length, _endPoint);
+        try
+        {
+            _udpClient.Send(midiData, midiData.Length, _endPoint);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+        _udpClientLoopBack.Send(midiData, midiData.Length, _endPoint);
     }
 
     /// <summary>
