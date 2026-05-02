@@ -48,7 +48,7 @@ class Program
 
         while (true)
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i <= 15; i++)
             {
                 var isS0PinOn = (i & 1) != 0;
                 var isS1PinOn = (i & 2) != 0;
@@ -62,7 +62,7 @@ class Program
 
                 Thread.Sleep(1);
 
-                var stopHasChanged = !controller.Read(sigPin).Equals((PinValue)(object?)StopsStatedByIndex[i]);
+                var stopHasChanged = !controller.Read(sigPin).Equals((PinValue)((object?)StopsStatedByIndex[i] ?? throw new InvalidOperationException()));
 
 
                 if (stopHasChanged)
