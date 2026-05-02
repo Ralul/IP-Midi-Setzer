@@ -47,9 +47,9 @@ class Program
                     int baseNote = i * 2 + 25;
                     int note = currentState ? baseNote : baseNote - 1;
 
-                    sender.SendNoteOn(SequencerDefinition.CHANEL_SEQUENCER, note);
+                    sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, note);
                     Task.Delay(100).Wait();
-                    sender.SendNoteOff(SequencerDefinition.CHANEL_SEQUENCER, note);
+                    sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, note);
 
                     StopStates[i] = currentState;
                 }
