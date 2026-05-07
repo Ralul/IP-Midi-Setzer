@@ -4,14 +4,21 @@ namespace IP_Midi_Setzer.Service;
 
 public class SequencerCombinationService
 {
-    private readonly List<Stop[]> _sequencerCombinations = new(1000);
+    private readonly List<Stop[]?> _sequencerCombinations =
+        Enumerable.Repeat<Stop[]?>(null, 1000).ToList();
 
     public void SetCombination(Stop[] stops, int combinationNumber)
     {
         // make sure to create copy not just references
         var clonedStops = stops.Clone() as Stop[];
-        
-        _sequencerCombinations[combinationNumber] = clonedStops;
+        try
+        {
+            _sequencerCombinations[combinationNumber] = clonedStops;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
     }
 
     public Stop[]? GetCombination(int sequencerCombinationNumber)
@@ -24,4 +31,3 @@ public class SequencerCombinationService
         return null;
     }
 }
-

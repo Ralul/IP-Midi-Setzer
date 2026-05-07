@@ -48,7 +48,6 @@ public class HandleSequencerActions
         {
             DisableAllStops();
 
-            _stops.Clear();
             return;
         }
 
@@ -134,7 +133,7 @@ public class HandleSequencerActions
             {
                 return;
             }
-            
+
             _currentPosition += 10;
 
             SetOrGetCombination();
@@ -180,7 +179,7 @@ public class HandleSequencerActions
 
     private async Task EnableSetOfStops(Stop[] desiredStops)
     {
-        Parallel.ForEachAsync(desiredStops, async desiredStop =>
+        await Parallel.ForEachAsync(desiredStops, async (desiredStop, cancellationToken) =>
         {
             if (desiredStop.IsEnabled)
             {
