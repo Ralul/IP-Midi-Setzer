@@ -6,7 +6,7 @@ namespace IP_Midi_Setzer.EventHandler;
 
 public class HandleSequencerActions
 {
-    private readonly StopStates _stopState;
+    private readonly Stop[] _stops;
     private readonly SequencerCombinationService _sequencerCombinationService;
     private readonly Sender _sender;
 
@@ -28,11 +28,11 @@ public class HandleSequencerActions
     };
 
     public HandleSequencerActions(
-        StopStates stopStates,
+        Stop[] stopses,
         SequencerCombinationService sequencerCombinationService,
         Sender sender)
     {
-        _stopState = stopStates;
+        _stops = stopses;
         _sequencerCombinationService = sequencerCombinationService;
         _sender = sender;
     }
@@ -48,7 +48,7 @@ public class HandleSequencerActions
         {
             DisableAllStops();
 
-            _stopState.Clear();
+            _stops.Clear();
             return;
         }
 
@@ -178,25 +178,19 @@ public class HandleSequencerActions
         await Task.WhenAll(tasks);
     }
 
-    private async Task EnableSetOfStops(HashSet<int> desiredStops)
+    private async Task EnableSetOfStops(Stop[] desiredStops)
     {
-        var tasks = Enumerable.Range(1, 63).Select(async stop =>
+        Parallel.ForEachAsync(desiredStops, async desiredStop =>
         {
-            if (desiredStops.Contains(stop * 2 - 1))
+            if (desiredStop.IsEnabled)
             {
-                _sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2 - 1);
-                await Task.Delay(1000);
-                _sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2 - 1);
+                await desiredStop.EnableStop();
             }
             else
             {
-                _sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2);
-                await Task.Delay(1000);
-                _sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2);
+                await desiredStop.DisableStop();
             }
         });
-
-        await Task.WhenAll(tasks);
     }
 
     private void SetOrGetCombination()
@@ -204,9 +198,7 @@ public class HandleSequencerActions
         Console.WriteLine(_currentPosition);
         if (_isSetHold)
         {
-            var activeStops = _stopState.GetActiveStops();
-
-            _sequencerCombinationService.SetCombination(activeStops, _currentPosition);
+            _sequencerCombinationService.SetCombination(_stops, _currentPosition);
         }
         else
         {
