@@ -179,6 +179,7 @@ public class HandleSequencerActions
 
     private async Task EnableSetOfStops(Stop[] desiredStops)
     {
+        // todo try to set the desiredStops _stops
         await Parallel.ForEachAsync(desiredStops, async (desiredStop, cancellationToken) =>
         {
             if (desiredStop.IsEnabled)
@@ -203,12 +204,13 @@ public class HandleSequencerActions
         {
             var desiredCombination = _sequencerCombinationService.GetCombination(_currentPosition);
 
-            if (desiredCombination == null)
+            if (desiredCombination != null)
             {
+                _ = EnableSetOfStops(desiredCombination);
                 return;
             }
 
-            EnableSetOfStops(desiredCombination);
+            _ = DisableAllStops();
         }
     }
 

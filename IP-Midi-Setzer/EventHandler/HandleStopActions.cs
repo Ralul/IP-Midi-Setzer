@@ -45,7 +45,7 @@ public class HandleStopActions
 
         if (_stopsByChanelByNoteOn.TryGetValue(e.Channel, out var stopsByNoteOn))
         {
-            if (stopsByNoteOn.TryGetValue(e.Channel, out var stop))
+            if (stopsByNoteOn.TryGetValue(e.Note, out var stop))
             {
                 stop.IsEnabled = true;
             }
@@ -53,7 +53,7 @@ public class HandleStopActions
         
         if (_stopsByChanelByNoteOff.TryGetValue(e.Channel, out var stopsByNoteOff))
         {
-            if (stopsByNoteOff.TryGetValue(e.Channel, out var stop))
+            if (stopsByNoteOff.TryGetValue(e.Note, out var stop))
             {
                 stop.IsEnabled = false;
             }

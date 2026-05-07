@@ -9,8 +9,8 @@ public class SequencerCombinationService
 
     public void SetCombination(Stop[] stops, int combinationNumber)
     {
-        // make sure to create copy not just references
-        var clonedStops = stops.Clone() as Stop[];
+        // Deep copy: clone each Stop individually
+        var clonedStops = stops.Select(s => (Stop)s.Clone()).ToArray();
         try
         {
             _sequencerCombinations[combinationNumber] = clonedStops;
