@@ -197,17 +197,18 @@ public class HandleSequencerActions
 
     private async Task DisableAllStops()
     {
-        await Parallel.ForEachAsync(_stops, async (stop, cancellationToken) =>
+        for (var i = 0; i < _stops.Length; i++)
         {
-            await stop.DisableStop();
-        });
+            await Task.Delay(i);
+            _ = _stops[i].DisableStop();
+        }
     }
 
     private async Task EnableSetOfStops(Stop[] desiredStops)
     {
         for (var i = 0; i < desiredStops.Length; i++)
         {
-            await Task.Delay(i * 10);
+            await Task.Delay(i);
             if (desiredStops[i].IsEnabled)
             {
                 _ = desiredStops[i].EnableStop();
