@@ -24,8 +24,8 @@ public class StopsService
 
         for (var i = 0; i <= 63; i++)
         {
-            var noteToDisable = i * 2 +1;
-            var noteToEnable = i * 2;
+            var noteToDisable = i * 2;
+            var noteToEnable = i * 2 + 1;
             Stops.Add(noteToEnable, new StopViewModel(noteToEnable, noteToDisable, ActionSendNote, ActionSendNote));
         }
 
