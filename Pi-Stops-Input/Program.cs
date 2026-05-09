@@ -45,7 +45,7 @@ class Program
                     Console.WriteLine($"Stop {i} toggled -> {(currentState ? "ON" : "OFF")}");
 
                     int baseNote = i * 2 + 25;
-                    int note = currentState ? baseNote : baseNote - 1;
+                    int note = currentState ? baseNote : baseNote + 1;
 
                     sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, note);
                     Task.Delay(100).Wait();
