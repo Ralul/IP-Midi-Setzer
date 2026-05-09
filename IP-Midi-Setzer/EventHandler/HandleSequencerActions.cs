@@ -199,7 +199,7 @@ public class HandleSequencerActions
     {
         for (var i = 0; i < _stops.Length; i++)
         {
-            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 10));
+            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 100));
             _ = _stops[i].DisableStop();
         }
     }
@@ -208,7 +208,7 @@ public class HandleSequencerActions
     {
         for (var i = 0; i < desiredStops.Length; i++)
         {
-            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 10));
+            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 100));
             if (desiredStops[i].IsEnabled)
             {
                 _ = desiredStops[i].EnableStop();
