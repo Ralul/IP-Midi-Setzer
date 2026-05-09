@@ -16,11 +16,11 @@ public class Program
         const int channel = 10;
         for (var i = 0; i <= 63; i++)
         {
-            var noteToDisable = i * 2 ;
-            var noteToEnable = i * 2 +1;
+            var noteToDisable = i * 2 + 1;
+            var noteToEnable = i * 2;
             stops[i] = new Stop(noteToEnable, noteToDisable, channel, sender);
         }
-        
+
         var sequencerCombinaitonService = new SequencerCombinationService();
         var stopAction = new HandleStopActions(stops);
         var sequencerAction = new HandleSequencerActions(stops, sequencerCombinaitonService, sender);

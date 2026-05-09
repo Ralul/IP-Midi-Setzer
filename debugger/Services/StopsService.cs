@@ -12,7 +12,7 @@ public class StopsService
     private readonly Sender _sender;
     private readonly Receiver _receiver;
 
-    public readonly Dictionary<int, StopViewModel> Stops;
+    public readonly Dictionary<int, StopViewModel> Stops = [];
 
     public StopsService(
         Sender sender,
@@ -22,11 +22,12 @@ public class StopsService
         _sender = sender;
         _receiver = receiver;
 
-        Stops = Enumerable.Range(1, 63)
-            .ToDictionary(
-                key => key * 2 -1,
-                value => new StopViewModel(value * 2 - 1, value * 2, ActionSendNote, ActionSendNote)
-            );
+        for (var i = 0; i <= 63; i++)
+        {
+            var noteToDisable = i * 2 +1;
+            var noteToEnable = i * 2;
+            Stops.Add(noteToEnable, new StopViewModel(noteToEnable, noteToDisable, ActionSendNote, ActionSendNote));
+        }
 
         _receiver.NoteOn += NoteOnHandler;
         _receiver.NoteOff += NoteOffHandler;

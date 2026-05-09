@@ -11,14 +11,9 @@ public class SequencerCombinationService
     {
         // Deep copy: clone each Stop individually
         var clonedStops = stops.Select(s => (Stop)s.Clone()).ToArray();
-        try
-        {
-            _sequencerCombinations[combinationNumber] = clonedStops;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        
+        _sequencerCombinations[combinationNumber] = clonedStops;
+        
     }
 
     public Stop[]? GetCombination(int sequencerCombinationNumber)
