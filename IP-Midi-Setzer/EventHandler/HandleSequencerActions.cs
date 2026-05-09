@@ -205,14 +205,15 @@ public class HandleSequencerActions
 
     private async Task EnableSetOfStops(Stop[] desiredStops)
     {
-        await Parallel.ForEachAsync(desiredStops, async (desiredStop, cancellationToken) =>
+        for (var i = 0; i < desiredStops.Length; i++)
         {
-            if (desiredStop.IsEnabled)
+            await Task.Delay(i * 10);
+            if (desiredStops[i].IsEnabled)
             {
-                await desiredStop.EnableStop();
-                if (_stopsByChanelByNoteOn.TryGetValue(desiredStop.Channel, out var stopsByNoteOn))
+                _ = desiredStops[i].EnableStop();
+                if (_stopsByChanelByNoteOn.TryGetValue(desiredStops[i].Channel, out var stopsByNoteOn))
                 {
-                    if (stopsByNoteOn.TryGetValue(desiredStop.NoteToEnable, out var stop))
+                    if (stopsByNoteOn.TryGetValue(desiredStops[i].NoteToEnable, out var stop))
                     {
                         stop.IsEnabled = true;
                     }
@@ -220,16 +221,16 @@ public class HandleSequencerActions
             }
             else
             {
-                await desiredStop.DisableStop();
-                if (_stopsByChanelByNoteOff.TryGetValue(desiredStop.Channel, out var stopsByNoteOff))
+                _ = desiredStops[i].DisableStop();
+                if (_stopsByChanelByNoteOff.TryGetValue(desiredStops[i].Channel, out var stopsByNoteOff))
                 {
-                    if (stopsByNoteOff.TryGetValue(desiredStop.NoteToDisable, out var stop))
+                    if (stopsByNoteOff.TryGetValue(desiredStops[i].NoteToDisable, out var stop))
                     {
                         stop.IsEnabled = false;
                     }
                 }
             }
-        });
+        }
     }
 
     private void SetOrGetCombination()
