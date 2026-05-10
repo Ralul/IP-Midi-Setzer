@@ -40,12 +40,12 @@ public class StopsService
         {
             return;
         }
-
+        // to do refactor this not just +1 (magic naumbers) somthing analog to IP-Midi-Setzer/EventHandler/HandleStopActions.cs
         if (Stops.TryGetValue(e.Note, out var stopToEnable))
         {
             stopToEnable.IsSolenoidToEnableStopOn = true;
         }
-        else if (Stops.TryGetValue(e.Note - 1, out var stopToDisable))
+        else if (Stops.TryGetValue(e.Note + 1, out var stopToDisable))
         {
             stopToDisable.IsSolenoidToDisableStopOn = true;
         }
@@ -62,7 +62,7 @@ public class StopsService
         {
             stopToEnable.IsSolenoidToEnableStopOn = false;
         }
-        else if (Stops.TryGetValue(e.Note - 1, out var stopToDisable))
+        else if (Stops.TryGetValue(e.Note + 1, out var stopToDisable))
         {
             stopToDisable.IsSolenoidToDisableStopOn = false;
         }
