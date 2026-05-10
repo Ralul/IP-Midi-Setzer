@@ -6,7 +6,31 @@ namespace IP_Midi_Setzer.EventHandler;
 
 public class HandleSequencerActions
 {
-    private readonly StopStates _stopState;
+    private readonly Stop[] _stops;
+
+    // Dictionary for fast access to the stop first int represents the channel the second int represents the note
+    // The Dictionary if first initialized with the known channels
+    private readonly Dictionary<int, Dictionary<int, Stop>> _stopsByChanelByNoteOn =
+        new()
+        {
+            { SequencerDefinition.CHANEL_STOPS_1_126, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_127_252, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_253_378, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_379_504, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_505_630, new Dictionary<int, Stop>() }
+        };
+
+    private readonly Dictionary<int, Dictionary<int, Stop>> _stopsByChanelByNoteOff =
+        new()
+        {
+            { SequencerDefinition.CHANEL_STOPS_1_126, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_127_252, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_253_378, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_379_504, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_505_630, new Dictionary<int, Stop>() }
+        };
+
+
     private readonly SequencerCombinationService _sequencerCombinationService;
     private readonly Sender _sender;
 
@@ -28,13 +52,19 @@ public class HandleSequencerActions
     };
 
     public HandleSequencerActions(
-        StopStates stopStates,
+        Stop[] stops,
         SequencerCombinationService sequencerCombinationService,
         Sender sender)
     {
-        _stopState = stopStates;
+        _stops = stops;
         _sequencerCombinationService = sequencerCombinationService;
         _sender = sender;
+
+        foreach (var stop in stops)
+        {
+            _stopsByChanelByNoteOn[stop.Channel].Add(stop.NoteToEnable, stop);
+            _stopsByChanelByNoteOff[stop.Channel].Add(stop.NoteToDisable, stop);
+        }
     }
 
     public void NoteOnHandler(object? sender, NoteEventArgs e)
@@ -48,7 +78,6 @@ public class HandleSequencerActions
         {
             DisableAllStops();
 
-            _stopState.Clear();
             return;
         }
 
@@ -134,7 +163,7 @@ public class HandleSequencerActions
             {
                 return;
             }
-            
+
             _currentPosition += 10;
 
             SetOrGetCombination();
@@ -168,35 +197,41 @@ public class HandleSequencerActions
 
     private async Task DisableAllStops()
     {
-        var tasks = Enumerable.Range(1, 63).Select(async stop =>
+        for (var i = 0; i < _stops.Length; i++)
         {
-            _sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2);
-            await Task.Delay(1000);
-            _sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2);
-        });
-
-        await Task.WhenAll(tasks);
+            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 100));
+            _ = _stops[i].DisableStop();
+        }
     }
 
-    private async Task EnableSetOfStops(HashSet<int> desiredStops)
+    private async Task EnableSetOfStops(Stop[] desiredStops)
     {
-        var tasks = Enumerable.Range(1, 63).Select(async stop =>
+        for (var i = 0; i < desiredStops.Length; i++)
         {
-            if (desiredStops.Contains(stop * 2 - 1))
+            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 100));
+            if (desiredStops[i].IsEnabled)
             {
-                _sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2 - 1);
-                await Task.Delay(1000);
-                _sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2 - 1);
+                _ = desiredStops[i].EnableStop();
+                if (_stopsByChanelByNoteOn.TryGetValue(desiredStops[i].Channel, out var stopsByNoteOn))
+                {
+                    if (stopsByNoteOn.TryGetValue(desiredStops[i].NoteToEnable, out var stop))
+                    {
+                        stop.IsEnabled = true;
+                    }
+                }
             }
             else
             {
-                _sender.SendNoteOn(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2);
-                await Task.Delay(1000);
-                _sender.SendNoteOff(SequencerDefinition.CHANEL_STOPS_1_126, stop * 2);
+                _ = desiredStops[i].DisableStop();
+                if (_stopsByChanelByNoteOff.TryGetValue(desiredStops[i].Channel, out var stopsByNoteOff))
+                {
+                    if (stopsByNoteOff.TryGetValue(desiredStops[i].NoteToDisable, out var stop))
+                    {
+                        stop.IsEnabled = false;
+                    }
+                }
             }
-        });
-
-        await Task.WhenAll(tasks);
+        }
     }
 
     private void SetOrGetCombination()
@@ -204,20 +239,19 @@ public class HandleSequencerActions
         Console.WriteLine(_currentPosition);
         if (_isSetHold)
         {
-            var activeStops = _stopState.GetActiveStops();
-
-            _sequencerCombinationService.SetCombination(activeStops, _currentPosition);
+            _sequencerCombinationService.SetCombination(_stops, _currentPosition);
         }
         else
         {
             var desiredCombination = _sequencerCombinationService.GetCombination(_currentPosition);
 
-            if (desiredCombination == null)
+            if (desiredCombination != null)
             {
+                _ = EnableSetOfStops(desiredCombination);
                 return;
             }
 
-            EnableSetOfStops(desiredCombination);
+            _ = DisableAllStops();
         }
     }
 

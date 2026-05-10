@@ -1,18 +1,41 @@
 using Core;
 using Core.Definitions;
-using IP_Midi_Setzer.Service;
 
 namespace IP_Midi_Setzer.EventHandler;
 
 public class HandleStopActions
 {
-    private readonly StopStates _stopState;
+    // Dictionary for fast access to the stop first int represents the channel the second int represents the note
+    // The Dictionary if first initialized with the known channels
+    private readonly Dictionary<int, Dictionary<int, Stop>> _stopsByChanelByNoteOn =
+        new()
+        {
+            { SequencerDefinition.CHANEL_STOPS_1_126, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_127_252, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_253_378, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_379_504, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_505_630, new Dictionary<int, Stop>() }
+        };
 
-    public HandleStopActions(StopStates stopState)
+    private readonly Dictionary<int, Dictionary<int, Stop>> _stopsByChanelByNoteOff =
+        new()
+        {
+            { SequencerDefinition.CHANEL_STOPS_1_126, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_127_252, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_253_378, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_379_504, new Dictionary<int, Stop>() },
+            { SequencerDefinition.CHANEL_STOPS_505_630, new Dictionary<int, Stop>() }
+        };
+
+    public HandleStopActions(Stop[] stops)
     {
-        _stopState = stopState;
+        foreach (var stop in stops)
+        {
+            _stopsByChanelByNoteOn[stop.Channel].Add(stop.NoteToEnable, stop);
+            _stopsByChanelByNoteOff[stop.Channel].Add(stop.NoteToDisable, stop);
+        }
     }
-    
+
     public void NoteOnHandler(object? sender, NoteEventArgs e)
     {
         if (e.Channel == SequencerDefinition.CHANEL_SEQUENCER)
@@ -20,36 +43,21 @@ public class HandleStopActions
             return;
         }
 
-        if (e.Channel == SequencerDefinition.CHANEL_STOPS_1_126)
+        if (_stopsByChanelByNoteOn.TryGetValue(e.Channel, out var stopsByNoteOn))
         {
-            if (e.Note % 2 == 1)
+            if (stopsByNoteOn.TryGetValue(e.Note, out var stop))
             {
-                _stopState.SetStopByNote(e.Note, true);
-            }
-            else
-            {
-                _stopState.SetStopByNote(e.Note -1, false);
+                stop.IsEnabled = true;
             }
         }
         
-        if (e.Channel == SequencerDefinition.CHANEL_STOPS_127_252)
+        if (_stopsByChanelByNoteOff.TryGetValue(e.Channel, out var stopsByNoteOff))
         {
-            // todo add hanling
+            if (stopsByNoteOff.TryGetValue(e.Note, out var stop))
+            {
+                stop.IsEnabled = false;
+            }
         }
-        
-        if (e.Channel == SequencerDefinition.CHANEL_STOPS_253_378)
-        {
-            // todo add hanling
-        }
-        
-        if (e.Channel == SequencerDefinition.CHANEL_STOPS_379_504)
-        {
-            // todo add hanling
-        }
-        
-        if (e.Channel == SequencerDefinition.CHANEL_STOPS_505_630)
-        {
-            // todo add hanling
-        }
-    }
+}
+
 }
