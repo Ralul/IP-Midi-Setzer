@@ -8,7 +8,7 @@ public class Program
     {
         Console.WriteLine("Hello, World!");
 
-        using var sender = new Sender();
+        var sender = new Sender();
         using var receiver = new Receiver(); // default 225.0.0.37:21928
 
         var stops = new Stop[64];
