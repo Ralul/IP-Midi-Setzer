@@ -47,7 +47,7 @@ public class Program
         controller.Write(Db6Pin, PinValue.High);
         controller.Write(Db7Pin, PinValue.High);
 
-        _ = WriteInstruction(0x00, controller);
+        _ = WriteInstruction(0x01, controller);
         
         Task.Delay(50).Wait();
         
