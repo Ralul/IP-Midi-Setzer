@@ -47,6 +47,8 @@ public class Program
         WriteInstruction(0x01, controller).Wait();
         WriteInstruction(0x02, controller).Wait();
         WriteInstruction(0x0C, controller).Wait();
+
+        Console.ReadLine();
     }
 
     private static async Task WriteInstruction(
@@ -75,25 +77,25 @@ public class Program
         );
         controller.Write(
             Db4Pin,
-            (value & 0x10) != 0 ? PinValue.High : PinValue.Low
+            (value & 0x16) != 0 ? PinValue.High : PinValue.Low
         );
         controller.Write(
             Db5Pin,
-            (value & 0x20) != 0 ? PinValue.High : PinValue.Low
+            (value & 0x32) != 0 ? PinValue.High : PinValue.Low
         );
         controller.Write(
             Db6Pin,
-            (value & 0x40) != 0 ? PinValue.High : PinValue.Low
+            (value & 0x64) != 0 ? PinValue.High : PinValue.Low
         );
         controller.Write(
             Db7Pin,
-            (value & 0x80) != 0 ? PinValue.High : PinValue.Low
+            (value & 0x128) != 0 ? PinValue.High : PinValue.Low
         );
 
-        await Task.Delay(1);
+        await Task.Delay(10);
 
         controller.Write(EPin, PinValue.High);
-        await Task.Delay(1);
+        await Task.Delay(10);
         controller.Write(EPin, PinValue.Low);
 
         if (value == 0x01 || value == 0x02)
