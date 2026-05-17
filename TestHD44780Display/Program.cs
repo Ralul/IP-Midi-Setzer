@@ -37,17 +37,18 @@ public class Program
         controller.Write(RsPin, PinValue.Low);
         controller.Write(RwPin, PinValue.Low);
         controller.Write(EPin, PinValue.Low);
+        
+        controller.Write(Db0Pin, PinValue.Low);
+        controller.Write(Db1Pin, PinValue.Low);
+        controller.Write(Db2Pin, PinValue.Low);
+        controller.Write(Db3Pin, PinValue.Low);
+        controller.Write(Db4Pin, PinValue.Low);
+        controller.Write(Db5Pin, PinValue.Low);
+        controller.Write(Db6Pin, PinValue.Low);
+        controller.Write(Db7Pin, PinValue.Low);
 
         Task.Delay(50).Wait();
-
-        WriteInstruction(0x39, controller).Wait();
-        WriteInstruction(0x08, controller).Wait();
-        WriteInstruction(0x06, controller).Wait();
-        WriteInstruction(0x17, controller).Wait();
-        WriteInstruction(0x01, controller).Wait();
-        WriteInstruction(0x02, controller).Wait();
-        WriteInstruction(0x0C, controller).Wait();
-
+        
         Console.ReadLine();
     }
 
@@ -91,20 +92,5 @@ public class Program
             Db7Pin,
             (value & 0x128) != 0 ? PinValue.High : PinValue.Low
         );
-
-        await Task.Delay(10);
-
-        controller.Write(EPin, PinValue.High);
-        await Task.Delay(10);
-        controller.Write(EPin, PinValue.Low);
-
-        if (value == 0x01 || value == 0x02)
-        {
-            await Task.Delay(2);
-        }
-        else
-        {
-            await Task.Delay(1);
-        }
     }
 }
