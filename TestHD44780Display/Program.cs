@@ -34,18 +34,18 @@ public class Program
         controller.OpenPin(Db6Pin, PinMode.Output);
         controller.OpenPin(Db7Pin, PinMode.Output);
 
-        controller.Write(RsPin, PinValue.Low);
-        controller.Write(RwPin, PinValue.Low);
-        controller.Write(EPin, PinValue.Low);
+        controller.Write(RsPin, PinValue.High);
+        controller.Write(RwPin, PinValue.High);
+        controller.Write(EPin, PinValue.High);
         
-        controller.Write(Db0Pin, PinValue.Low);
-        controller.Write(Db1Pin, PinValue.Low);
-        controller.Write(Db2Pin, PinValue.Low);
-        controller.Write(Db3Pin, PinValue.Low);
-        controller.Write(Db4Pin, PinValue.Low);
-        controller.Write(Db5Pin, PinValue.Low);
-        controller.Write(Db6Pin, PinValue.Low);
-        controller.Write(Db7Pin, PinValue.Low);
+        controller.Write(Db0Pin, PinValue.High);
+        controller.Write(Db1Pin, PinValue.High);
+        controller.Write(Db2Pin, PinValue.High);
+        controller.Write(Db3Pin, PinValue.High);
+        controller.Write(Db4Pin, PinValue.High);
+        controller.Write(Db5Pin, PinValue.High);
+        controller.Write(Db6Pin, PinValue.High);
+        controller.Write(Db7Pin, PinValue.High);
 
         Task.Delay(50).Wait();
         
