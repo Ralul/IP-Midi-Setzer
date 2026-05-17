@@ -4,18 +4,18 @@ namespace TestHD44780Display;
 
 public class Program
 {
-    private const int RsPin = 1; //black
-    private const int RwPin = 2; //gray
-    private const int EPin = 4; //white
+    private const int RsPin = 5;
+    private const int RwPin = 6;
+    private const int EPin = 13;
 
-    private const int Db0Pin = 5; //yellow
-    private const int Db1Pin = 6;
-    private const int Db2Pin = 7;
-    private const int Db3Pin = 8;
-    private const int Db4Pin = 9;
-    private const int Db5Pin = 10;
-    private const int Db6Pin = 11;
-    private const int Db7Pin = 12;
+    private const int Db0Pin = 19;
+    private const int Db1Pin = 26;
+    private const int Db2Pin = 21;
+    private const int Db3Pin = 20;
+    private const int Db4Pin = 16;
+    private const int Db5Pin = 12;
+    private const int Db6Pin = 1;
+    private const int Db7Pin = 7;
 
     public static void Main()
     {
