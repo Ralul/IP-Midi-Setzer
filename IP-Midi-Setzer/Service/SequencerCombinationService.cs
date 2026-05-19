@@ -7,7 +7,12 @@ public class SequencerCombinationService
     private readonly List<Stop[]?> _sequencerCombinations =
         Enumerable.Repeat<Stop[]?>(null, 1000).ToList();
 
-    private readonly PersistenceService _persistenceService = new PersistenceService();
+    private readonly PersistenceService _persistenceService;
+
+    public SequencerCombinationService(PersistenceService persistenceService)
+    {
+        _persistenceService = persistenceService;
+    }
 
     public void SetCombination(Stop[] stops, int combinationNumber)
     {

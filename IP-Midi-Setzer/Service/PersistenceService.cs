@@ -1,41 +1,58 @@
 using System.Text.Json;
 using Core;
+using IP_Midi_Setzer.Models;
 
 namespace IP_Midi_Setzer.Service;
 
 public class PersistenceService
 {
-    private readonly string _applicationDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+    private readonly Sender _sender;
     private const string ApplicationName = "IP-Midi-Setzer";
 
-    public PersistenceService()
+    private string DirectoryPath { get => Path.Combine(field, ApplicationName); } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+    public PersistenceService(Sender sender)
     {
+        _sender = sender;
+        Directory.CreateDirectory(DirectoryPath);
     }
 
     public Stop[]? GetCombination(int sequencerCombinationNumber)
     {
         try
         {
-            var path = Path.Combine(_applicationDataPath, ApplicationName, $"{sequencerCombinationNumber}.json");
-            var streamReader = new StreamReader(path);
+            var path = Path.Combine(DirectoryPath, $"{sequencerCombinationNumber}.json");
 
-            var fileContent = streamReader.ReadToEnd();
-            
-            Console.WriteLine(fileContent);
-
-            var stops = JsonSerializer.Deserialize<Stop[]>(fileContent);
-
-            var returnStops = new List<Stop>();
-            foreach (var stop in stops)
+            if (!File.Exists(path))
             {
-                returnStops.Add(new Stop(stop.NoteToEnable,  stop.NoteToDisable, stop.Channel, new Sender()));
+                return null;
             }
-            return returnStops.ToArray();
+
+            var fileContent = File.ReadAllText(path);
+            var stopsDtos = JsonSerializer.Deserialize<StopDto[]>(fileContent);
+
+            if (stopsDtos is null)
+            {
+                return null;
+            }
+            
+            var stops = new Stop[64];
+            const int channel = 10;
+            for (var i = 0; i <= 63; i++)
+            {
+                var noteToDisable = i * 2;
+                var noteToEnable = i * 2 + 1;
+                stops[i] = new Stop(noteToEnable, noteToDisable, channel, _sender)
+                {
+                    IsEnabled = stopsDtos[i].IsStopEnabled
+                };
+            }
+
+            return stops;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            
             return null;
         }
     }
@@ -44,17 +61,19 @@ public class PersistenceService
     {
         try
         {
-            var str = JsonSerializer.Serialize(stops);
+            StopDto[] stopDtos = new StopDto[stops.Length];
 
-            var path = Path.Combine(_applicationDataPath, ApplicationName, $"{sequencerCombinationNumber}.json");
+            for (var i = 0; i < stops.Length; i++)
+            {
+                stopDtos[i] = new StopDto
+                {
+                    IsStopEnabled = stops[i].IsEnabled
+                };
+            }
 
-            var streamWriter = new StreamWriter(path);
-
-            streamWriter.Write(str);
-            
-            
-
-            streamWriter.Close();
+            var path = Path.Combine(DirectoryPath, $"{sequencerCombinationNumber}.json");
+            var str = JsonSerializer.Serialize(stopDtos);
+            File.WriteAllText(path, str);
         }
         catch (Exception e)
         {
