@@ -1,4 +1,5 @@
 ﻿using System.Device.Gpio;
+using System.Globalization;
 
 namespace TestHD44780Display;
 
@@ -37,31 +38,29 @@ public class Program
         controller.Write(RsPin, PinValue.High);
         controller.Write(RwPin, PinValue.High);
         controller.Write(EPin, PinValue.High);
-        
-        controller.Write(Db0Pin, PinValue.High);
-        controller.Write(Db1Pin, PinValue.High);
-        controller.Write(Db2Pin, PinValue.High);
-        controller.Write(Db3Pin, PinValue.High);
-        controller.Write(Db4Pin, PinValue.High);
-        controller.Write(Db5Pin, PinValue.High);
-        controller.Write(Db6Pin, PinValue.High);
-        controller.Write(Db7Pin, PinValue.High);
 
-        _ = WriteInstruction(0x02, controller);
-        
-        Task.Delay(50).Wait();
-        
+        WriteInstruction(0x39, controller).Wait();
+        WriteInstruction(0x08, controller).Wait();
+        WriteInstruction(0x06, controller).Wait();
+        WriteInstruction(0x17, controller).Wait();
+        WriteInstruction(0x01, controller).Wait();
+        WriteInstruction(0x02, controller).Wait();
+        WriteInstruction(0x0C, controller).Wait();
+
+
         Console.ReadLine();
     }
+
 
     private static async Task WriteInstruction(
         byte value,
         GpioController controller
     )
     {
+        await WaitUntilNotBusy(controller);
+
         controller.Write(RsPin, PinValue.Low);
         controller.Write(RwPin, PinValue.Low);
-        controller.Write(EPin, PinValue.Low);
 
         controller.Write(
             Db0Pin,
@@ -81,19 +80,45 @@ public class Program
         );
         controller.Write(
             Db4Pin,
-            (value & 0x16) != 0 ? PinValue.High : PinValue.Low
+            (value & 0x10) != 0 ? PinValue.High : PinValue.Low
         );
         controller.Write(
             Db5Pin,
-            (value & 0x32) != 0 ? PinValue.High : PinValue.Low
+            (value & 0x20) != 0 ? PinValue.High : PinValue.Low
         );
         controller.Write(
             Db6Pin,
-            (value & 0x64) != 0 ? PinValue.High : PinValue.Low
+            (value & 0x40) != 0 ? PinValue.High : PinValue.Low
         );
         controller.Write(
             Db7Pin,
-            (value & 0x128) != 0 ? PinValue.High : PinValue.Low
+            (value & 0x80) != 0 ? PinValue.High : PinValue.Low
         );
+
+        controller.Write(EPin, PinValue.High);
+        await Task.Delay(10);
+        controller.Write(EPin, PinValue.Low);
+    }
+
+    private static async Task WaitUntilNotBusy(GpioController controller)
+    {
+        controller.SetPinMode(Db7Pin, PinMode.InputPullDown); // first debug step try InputPullUp
+        controller.Write(RwPin, PinValue.High);
+        controller.Write(RsPin, PinValue.High);
+
+        var isBusy = true;
+
+        while (isBusy)
+        {
+            var value = controller.Read(Db7Pin);
+
+            if (value == PinValue.Low)
+            {
+                isBusy = false;
+            }
+
+            await Task.Delay(1);
+        }
+        controller.SetPinMode(Db7Pin, PinMode.Output);
     }
 }
