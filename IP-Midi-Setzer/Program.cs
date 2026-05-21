@@ -2,14 +2,16 @@
 using IP_Midi_Setzer.EventHandler;
 using IP_Midi_Setzer.Service;
 
+namespace IP_Midi_Setzer;
+
 public class Program
 {
     public static void Main(string[] args)
     {
         Console.WriteLine("Hello, World!");
 
-        using var sender = new Sender();
-        using var receiver = new Receiver(); // default 225.0.0.37:21928
+        var sender = new Sender();
+        using var receiver = new Receiver();
 
         var stops = new Stop[64];
 
@@ -21,7 +23,8 @@ public class Program
             stops[i] = new Stop(noteToEnable, noteToDisable, channel, sender);
         }
 
-        var sequencerCombinaitonService = new SequencerCombinationService();
+        var persistenceService = new PersistenceService(sender);
+        var sequencerCombinaitonService = new SequencerCombinationService(persistenceService);
         var stopAction = new HandleStopActions(stops);
         var sequencerAction = new HandleSequencerActions(stops, sequencerCombinaitonService, sender);
 

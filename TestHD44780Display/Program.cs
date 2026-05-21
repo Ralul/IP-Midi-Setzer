@@ -4,11 +4,11 @@ namespace TestHD44780Display;
 
 public class Program
 {
-    private const int RsPin = 1;
-    private const int RwPin = 2;
-    private const int EPin = 4;
+    private const int RsPin = 1; //black
+    private const int RwPin = 2; //gray
+    private const int EPin = 4; //white
 
-    private const int Db0Pin = 5;
+    private const int Db0Pin = 5; //yellow
     private const int Db1Pin = 6;
     private const int Db2Pin = 7;
     private const int Db3Pin = 8;
