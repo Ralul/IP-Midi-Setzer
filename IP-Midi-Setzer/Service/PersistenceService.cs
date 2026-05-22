@@ -6,14 +6,17 @@ namespace IP_Midi_Setzer.Service;
 
 public class PersistenceService
 {
-    private readonly Sender _sender;
+    private readonly StopsCreateUtil _stopsCreateUtil;
     private const string ApplicationName = "IP-Midi-Setzer";
 
-    private string DirectoryPath { get => Path.Combine(field, ApplicationName); } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-    public PersistenceService(Sender sender)
+    private string DirectoryPath
     {
-        _sender = sender;
+        get => Path.Combine(field, ApplicationName);
+    } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+    public PersistenceService(StopsCreateUtil stopsCreateUtil)
+    {
+        _stopsCreateUtil = stopsCreateUtil;
         Directory.CreateDirectory(DirectoryPath);
     }
 
@@ -35,18 +38,8 @@ public class PersistenceService
             {
                 return null;
             }
-            
-            var stops = new Stop[64];
-            const int channel = 10;
-            for (var i = 0; i <= 63; i++)
-            {
-                var noteToDisable = i * 2;
-                var noteToEnable = i * 2 + 1;
-                stops[i] = new Stop(noteToEnable, noteToDisable, channel, _sender)
-                {
-                    IsEnabled = stopsDtos[i].IsStopEnabled
-                };
-            }
+
+            var stops = _stopsCreateUtil.GetCustomizedStops(stopsDtos);
 
             return stops;
         }

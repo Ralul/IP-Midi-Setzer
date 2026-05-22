@@ -12,18 +12,12 @@ public class Program
 
         var sender = new Sender();
         using var receiver = new Receiver();
+        
+        var stopsCreateUtil = new StopsCreateUtil(sender);
 
-        var stops = new Stop[64];
-
-        const int channel = 10;
-        for (var i = 0; i <= 63; i++)
-        {
-            var noteToDisable = i * 2;
-            var noteToEnable = i * 2 + 1;
-            stops[i] = new Stop(noteToEnable, noteToDisable, channel, sender);
-        }
-
-        var persistenceService = new PersistenceService(sender);
+        var stops = stopsCreateUtil.GetDisabledStops();
+        
+        var persistenceService = new PersistenceService(stopsCreateUtil);
         var sequencerCombinaitonService = new SequencerCombinationService(persistenceService);
         var stopAction = new HandleStopActions(stops);
         var sequencerAction = new HandleSequencerActions(stops, sequencerCombinaitonService, sender);
