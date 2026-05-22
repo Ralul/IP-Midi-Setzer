@@ -32,7 +32,7 @@ public class SequencerCombinationService
             {
                 return _sequencerCombinations[sequencerCombinationNumber];
             }
-            // find out why does that not work
+
             var storedSequencerCombination = _persistenceService.GetCombination(sequencerCombinationNumber);
 
             if (storedSequencerCombination != null)
