@@ -6,7 +6,7 @@ namespace IP_Midi_Setzer.Service;
 public class DisplayService : IDisposable
 {
     private readonly GpioController _controller;
-    private readonly Lcd2004 _lcd;
+    private readonly Lcd1602 _lcd;
 
     public DisplayService()
     {
@@ -20,7 +20,7 @@ public class DisplayService : IDisposable
 
         _controller = new GpioController();
 
-        _lcd = new Lcd2004(
+        _lcd = new Lcd1602(
             registerSelectPin: rs,
             enablePin: en,
             dataPins: dataPins,
@@ -41,7 +41,6 @@ public class DisplayService : IDisposable
     {
         Console.WriteLine($"Display service called: {number}");
         _lcd.Clear();
-        
         _lcd.SetCursorPosition(0, 0);
         _lcd.Write(number.ToString());
     }
