@@ -33,6 +33,7 @@ public class HandleSequencerActions
 
     private readonly SequencerCombinationService _sequencerCombinationService;
     private readonly Sender _sender;
+    private readonly DisplayService _displayService;
 
     private bool _isSetHold;
     private int _currentPosition;
@@ -54,11 +55,13 @@ public class HandleSequencerActions
     public HandleSequencerActions(
         Stop[] stops,
         SequencerCombinationService sequencerCombinationService,
-        Sender sender)
+        Sender sender,
+        DisplayService displayService)
     {
         _stops = stops;
         _sequencerCombinationService = sequencerCombinationService;
         _sender = sender;
+        _displayService = displayService;
 
         foreach (var stop in stops)
         {
@@ -237,6 +240,7 @@ public class HandleSequencerActions
     private void SetOrGetCombination()
     {
         Console.WriteLine(_currentPosition);
+        _displayService.ShowNumber(_currentPosition);
         if (_isSetHold)
         {
             _sequencerCombinationService.SetCombination(_stops, _currentPosition);
