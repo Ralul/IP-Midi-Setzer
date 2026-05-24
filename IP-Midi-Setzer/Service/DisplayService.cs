@@ -39,12 +39,11 @@ public class DisplayService : IDisposable
 
     public void ShowNumber(int number)
     {
-        Console.WriteLine($"Display service called: {number}");
         _lcd.Clear();
         _lcd.SetCursorPosition(0, 0);
         _lcd.Write(number.ToString());
     }
-
+    
     public void Dispose()
     {
         _lcd.Dispose();

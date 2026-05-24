@@ -7,6 +7,7 @@ namespace IP_Midi_Setzer.EventHandler;
 public class HandleSequencerActions
 {
     private readonly Stop[] _stops;
+    private readonly TimeSpan _delayBetweenCalls = new TimeSpan(0, 0, 0, 0, 0, 200);
 
     // Dictionary for fast access to the stop first int represents the channel the second int represents the note
     // The Dictionary if first initialized with the known channels
@@ -68,6 +69,8 @@ public class HandleSequencerActions
             _stopsByChanelByNoteOn[stop.Channel].Add(stop.NoteToEnable, stop);
             _stopsByChanelByNoteOff[stop.Channel].Add(stop.NoteToDisable, stop);
         }
+        
+        _displayService.ShowNumber(0);
     }
 
     public void NoteOnHandler(object? sender, NoteEventArgs e)
@@ -202,7 +205,7 @@ public class HandleSequencerActions
     {
         for (var i = 0; i < _stops.Length; i++)
         {
-            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 100));
+            await Task.Delay(_delayBetweenCalls * i);
             _ = _stops[i].DisableStop();
         }
     }
@@ -211,7 +214,7 @@ public class HandleSequencerActions
     {
         for (var i = 0; i < desiredStops.Length; i++)
         {
-            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 100));
+            await Task.Delay(_delayBetweenCalls * i);
             if (desiredStops[i].IsEnabled)
             {
                 _ = desiredStops[i].EnableStop();
