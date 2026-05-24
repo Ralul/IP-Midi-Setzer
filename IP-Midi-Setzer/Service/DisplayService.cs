@@ -39,6 +39,7 @@ public class DisplayService : IDisposable
 
     public void ShowNumber(int number)
     {
+        Console.WriteLine($"Display service called: {number}");
         _lcd.Clear();
         _lcd.Write(number.ToString());
     }
