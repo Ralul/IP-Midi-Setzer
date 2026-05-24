@@ -8,6 +8,7 @@ public class HandleSequencerActions
 {
     private readonly Stop[] _stops;
     private readonly TimeSpan _delayBetweenCalls = new TimeSpan(0, 0, 0, 0, 0, 200);
+    private const int MaxSequncerComibantions = 1000;
 
     // Dictionary for fast access to the stop first int represents the channel the second int represents the note
     // The Dictionary if first initialized with the known channels
@@ -33,7 +34,6 @@ public class HandleSequencerActions
 
 
     private readonly SequencerCombinationService _sequencerCombinationService;
-    private readonly Sender _sender;
     private readonly DisplayService _displayService;
 
     private bool _isSetHold;
@@ -56,12 +56,10 @@ public class HandleSequencerActions
     public HandleSequencerActions(
         Stop[] stops,
         SequencerCombinationService sequencerCombinationService,
-        Sender sender,
         DisplayService displayService)
     {
         _stops = stops;
         _sequencerCombinationService = sequencerCombinationService;
-        _sender = sender;
         _displayService = displayService;
 
         foreach (var stop in stops)
@@ -94,7 +92,7 @@ public class HandleSequencerActions
 
         if (e.Note == SequencerDefinition.FORWARD)
         {
-            if (_currentPosition == 1000)
+            if (_currentPosition == MaxSequncerComibantions)
             {
                 return;
             }
@@ -165,7 +163,7 @@ public class HandleSequencerActions
 
         if (e.Note == SequencerDefinition.DECIMAL_UP)
         {
-            if (_currentPosition >= 991)
+            if (_currentPosition >= MaxSequncerComibantions -9)
             {
                 return;
             }

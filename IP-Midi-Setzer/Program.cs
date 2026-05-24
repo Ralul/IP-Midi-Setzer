@@ -21,7 +21,7 @@ public class Program
         var persistenceService = new PersistenceService(stopsCreateUtil);
         var sequencerCombinaitonService = new SequencerCombinationService(persistenceService);
         var stopAction = new HandleStopActions(stops);
-        var sequencerAction = new HandleSequencerActions(stops, sequencerCombinaitonService, sender, displayService);
+        var sequencerAction = new HandleSequencerActions(stops, sequencerCombinaitonService, displayService);
 
         receiver.NoteOn += stopAction.NoteOnHandler;
 
