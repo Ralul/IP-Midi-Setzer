@@ -40,7 +40,7 @@ public class DisplayService : IDisposable
     public void ShowNumber(int number)
     {
         _lcd.Clear();
-        _lcd.SetCursorPosition(5, 0);
+        _lcd.SetCursorPosition(6, 0);
         _lcd.Write(number.ToString());
     }
     
