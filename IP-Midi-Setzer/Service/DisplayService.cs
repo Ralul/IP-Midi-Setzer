@@ -41,6 +41,8 @@ public class DisplayService : IDisposable
     {
         Console.WriteLine($"Display service called: {number}");
         _lcd.Clear();
+        
+        _lcd.SetCursorPosition(0, 0);
         _lcd.Write(number.ToString());
     }
 
