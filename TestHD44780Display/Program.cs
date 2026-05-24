@@ -116,7 +116,6 @@ public class Program
             {
                 isBusy = false;
             }
-            Console.WriteLine("Busy");
             await Task.Delay(1);
         }
         controller.SetPinMode(Db7Pin, PinMode.Output);
