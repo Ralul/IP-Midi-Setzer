@@ -65,6 +65,7 @@ class Program
 
                 var isToggled = controller.Read(sigPin);
 
+                // todo change the two forward and backwars button (add a mapping so that the ip signal is indibenden from the index of the buttons)
                 if (!PressedButtonsByIndex[i] && isToggled == PinValue.High)
                 {
                     PressedButtonsByIndex[i] = true;

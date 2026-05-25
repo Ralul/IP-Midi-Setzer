@@ -14,13 +14,14 @@ public class Program
         using var receiver = new Receiver();
         
         var stopsCreateUtil = new StopsCreateUtil(sender);
+        var displayService = new DisplayService();
 
         var stops = stopsCreateUtil.GetDisabledStops();
         
         var persistenceService = new PersistenceService(stopsCreateUtil);
         var sequencerCombinaitonService = new SequencerCombinationService(persistenceService);
         var stopAction = new HandleStopActions(stops);
-        var sequencerAction = new HandleSequencerActions(stops, sequencerCombinaitonService, sender);
+        var sequencerAction = new HandleSequencerActions(stops, sequencerCombinaitonService, displayService);
 
         receiver.NoteOn += stopAction.NoteOnHandler;
 

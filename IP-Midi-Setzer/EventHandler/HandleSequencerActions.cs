@@ -7,6 +7,8 @@ namespace IP_Midi_Setzer.EventHandler;
 public class HandleSequencerActions
 {
     private readonly Stop[] _stops;
+    private readonly TimeSpan _delayBetweenCalls = new TimeSpan(0, 0, 0, 0, 0, 200);
+    private const int MaxSequncerComibantions = 1000;
 
     // Dictionary for fast access to the stop first int represents the channel the second int represents the note
     // The Dictionary if first initialized with the known channels
@@ -32,7 +34,7 @@ public class HandleSequencerActions
 
 
     private readonly SequencerCombinationService _sequencerCombinationService;
-    private readonly Sender _sender;
+    private readonly DisplayService _displayService;
 
     private bool _isSetHold;
     private int _currentPosition;
@@ -54,17 +56,19 @@ public class HandleSequencerActions
     public HandleSequencerActions(
         Stop[] stops,
         SequencerCombinationService sequencerCombinationService,
-        Sender sender)
+        DisplayService displayService)
     {
         _stops = stops;
         _sequencerCombinationService = sequencerCombinationService;
-        _sender = sender;
+        _displayService = displayService;
 
         foreach (var stop in stops)
         {
             _stopsByChanelByNoteOn[stop.Channel].Add(stop.NoteToEnable, stop);
             _stopsByChanelByNoteOff[stop.Channel].Add(stop.NoteToDisable, stop);
         }
+        
+        _displayService.ShowNumber(0);
     }
 
     public void NoteOnHandler(object? sender, NoteEventArgs e)
@@ -88,7 +92,7 @@ public class HandleSequencerActions
 
         if (e.Note == SequencerDefinition.FORWARD)
         {
-            if (_currentPosition == 1000)
+            if (_currentPosition == MaxSequncerComibantions)
             {
                 return;
             }
@@ -159,7 +163,7 @@ public class HandleSequencerActions
 
         if (e.Note == SequencerDefinition.DECIMAL_UP)
         {
-            if (_currentPosition >= 991)
+            if (_currentPosition >= MaxSequncerComibantions -9)
             {
                 return;
             }
@@ -199,7 +203,7 @@ public class HandleSequencerActions
     {
         for (var i = 0; i < _stops.Length; i++)
         {
-            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 100));
+            await Task.Delay(_delayBetweenCalls * i);
             _ = _stops[i].DisableStop();
         }
     }
@@ -208,7 +212,7 @@ public class HandleSequencerActions
     {
         for (var i = 0; i < desiredStops.Length; i++)
         {
-            await Task.Delay(new TimeSpan(0,0,0,0,0, i * 100));
+            await Task.Delay(_delayBetweenCalls * i);
             if (desiredStops[i].IsEnabled)
             {
                 _ = desiredStops[i].EnableStop();
@@ -237,6 +241,7 @@ public class HandleSequencerActions
     private void SetOrGetCombination()
     {
         Console.WriteLine(_currentPosition);
+        _displayService.ShowNumber(_currentPosition);
         if (_isSetHold)
         {
             _sequencerCombinationService.SetCombination(_stops, _currentPosition);
