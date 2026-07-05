@@ -36,6 +36,12 @@ if ! command -v dotnet >/dev/null; then
   exit 1
 fi
 
+if ! id -u "$RUN_USER" >/dev/null 2>&1; then
+  echo "RUN_USER '$RUN_USER' is not a valid system user. Pass the right one, e.g.:" >&2
+  echo "  sudo RUN_USER=<your-username> ./install-autostart.sh" >&2
+  exit 1
+fi
+
 # service-name -> "csproj-path:executable-name"
 declare -A PROJECTS=(
   [ip-midi-setzer]="IP-Midi-Setzer/IP-Midi-Setzer.csproj:IP-Midi-Setzer"
@@ -61,6 +67,10 @@ for service_name in "${!PROJECTS[@]}"; do
 
   unit_path="/etc/systemd/system/$service_name.service"
   echo "==> Writing $unit_path"
+  # Remove any pre-existing unit first: if it was ever `systemctl mask`-ed
+  # (a symlink to /dev/null), writing through the symlink would silently
+  # discard the new unit content and leave the service masked forever.
+  rm -f "$unit_path"
   cat > "$unit_path" <<EOF
 [Unit]
 Description=$service_name (IP-Midi-Setzer)
