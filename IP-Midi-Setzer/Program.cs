@@ -33,7 +33,16 @@ public class Program
 
         receiver.Start();
 
-        Console.WriteLine("Listening... Press Enter to stop.");
-        Console.ReadLine();
+        Console.WriteLine("Listening... Press Ctrl+C to stop.");
+
+        var exitEvent = new ManualResetEventSlim(false);
+        Console.CancelKeyPress += (_, e) =>
+        {
+            e.Cancel = true;
+            exitEvent.Set();
+        };
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => exitEvent.Set();
+
+        exitEvent.Wait();
     }
 }
