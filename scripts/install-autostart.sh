@@ -13,13 +13,15 @@ set -euo pipefail
 # Re-run it any time after pulling new code to rebuild and restart the services.
 #
 # Configure via environment variables (all optional):
-#   RUN_USER     user the services run as              (default: pi)
+#   RUN_USER     user the services run as              (default: the user who
+#                invoked sudo, e.g. `sudo ./install-autostart.sh` as nepomuk
+#                runs the services as nepomuk; falls back to "pi")
 #   DOTNET_RID   .NET runtime identifier to publish for (default: linux-arm64;
 #                use linux-arm for a 32-bit Raspberry Pi OS / older Pi)
 #   INSTALL_DIR  where published binaries are placed    (default: /opt/ip-midi-setzer)
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-RUN_USER="${RUN_USER:-pi}"
+RUN_USER="${RUN_USER:-${SUDO_USER:-pi}}"
 DOTNET_RID="${DOTNET_RID:-linux-arm64}"
 INSTALL_DIR="${INSTALL_DIR:-/opt/ip-midi-setzer}"
 ENV_FILE="$REPO_DIR/.env"
